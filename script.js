@@ -2,25 +2,17 @@ document.getElementById('lead-form').addEventListener('submit', function(e) {
   e.preventDefault();
   const form = e.target;
   const success = document.getElementById('form-success');
-  
-  // In production, replace with your form endpoint (Formspree, Vercel, etc.)
-  // For now, simulate success
   form.style.display = 'none';
   success.style.display = 'block';
-  
-  // Optional: console log the data for testing
-  const formData = new FormData(form);
-  const data = Object.fromEntries(formData);
-  console.log('Lead captured:', data);
+  const data = Object.fromEntries(new FormData(form));
+  console.log('Lead:', data);
+  // TODO: wire to email / Formspree / Vercel function
 });
 
-// Smooth scroll for CTAs
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
     e.preventDefault();
-    const target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) t.scrollIntoView({ behavior: 'smooth' });
   });
 });
