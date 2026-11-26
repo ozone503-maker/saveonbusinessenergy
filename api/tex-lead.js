@@ -1,10 +1,10 @@
 // POST /api/tex-lead
-// Receives Speko's post-call webhook (call.report) for Wittenbot2.0 and
+// Receives Speko's post-call webhook (call.report) for ERBOT and
 // emails the lead to Gavin immediately.
 //
 // Speko setup (dashboard: Settings -> Webhooks):
 //   - Create an endpoint with URL https://saveonbusinessenergy.com/api/tex-lead
-//   - Subscribe it to the `call.report` event, scoped to the Wittenbot2.0 agent
+//   - Subscribe it to the `call.report` event, scoped to the ERBOT agent
 //   - Add these extraction fields on the endpoint (or on the agent):
 //       name (string), business_name (string), email (string),
 //       phone (string), zip (string), monthly_spend (string),
@@ -15,18 +15,27 @@
 //
 // Env vars (Vercel: Project Settings -> Environment Variables):
 //   RESEND_API_KEY    - Resend API key (resend.com/api-keys)
-//   TEX_LEAD_EMAIL    - where leads go (default: gavindawson22@gmail.com)
-//   TEX_FROM_EMAIL    - verified sender (default: Wittenbot2.0 <tex@saveonbusinessenergy.com>)
-//                       The sender domain must be verified in Resend first,
-//                       or Resend will refuse to send.
+//   TEX_LEAD_EMAIL    - where leads go (required; comma-separated for more
+//                       than one). Currently gavindawson22@gmail.com only.
+//   TEX_FROM_EMAIL    - sender (default: ERBOT <onboarding@resend.dev>).
+//                       onboarding@resend.dev only delivers to the Resend
+//                       account owner's email. Once saveonbusinessenergy.com
+//                       is verified in Resend, set this to
+//                       leads@saveonbusinessenergy.com.
 //   SPEKO_WEBHOOK_SECRET - optional; when set, the Standard Webhooks
 //                       signature is verified on every delivery.
+//
+// A lead is emailed ONLY when consent is true (the `consent` extraction
+// field). Without consent, the webhook is acknowledged and nothing is sent.
 
 const crypto = require('crypto');
 
-const LEAD_EMAIL = process.env.TEX_LEAD_EMAIL || 'gavindawson22@gmail.com';
+const LEAD_EMAILS = (process.env.TEX_LEAD_EMAIL || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
 const FROM_EMAIL =
-  process.env.TEX_FROM_EMAIL || 'Wittenbot2.0 <tex@saveonbusinessenergy.com>';
+  process.env.TEX_FROM_EMAIL || 'ERBOT <onboarding@resend.dev>';
 
 // Speko re-fires call.report when the recording is ready. Skip a second
 // email for a call this instance already mailed. (A cold start can still
@@ -174,6 +183,15 @@ module.exports = async function handler(req, res) {
     consent: pick(custom, ['consent', 'agreed_to_contact', 'permission_to_contact']),
   };
 
+  // Only send a lead when the caller consented to be contacted.
+  const consentGiven =
+    lead.consent === true ||
+    (typeof lead.consent === 'string' &&
+      ['true', 'yes', '1', 'y'].includes(lead.consent.trim().toLowerCase()));
+  if (!consentGiven) {
+    return res.status(200).json({ ok: true, skipped: 'no consent', call_id: callId });
+  }
+
   const summary = payload.summary || '';
   const outcome = payload.outcome || payload.outcome_label || '';
   const duration = payload.duration_seconds || payload.duration || null;
@@ -187,11 +205,11 @@ module.exports = async function handler(req, res) {
 
   const who = lead.name || lead.business || 'Unknown caller';
   const subject =
-    'New Wittenbot2.0 lead: ' + who + ' [' + String(callId).slice(0, 12) + ']';
+    'New ERBOT lead: ' + who + ' [' + String(callId).slice(0, 12) + ']';
 
   const html =
-    '<h2 style="margin:0 0 8px;">New lead from Wittenbot2.0</h2>' +
-    '<p style="margin:0 0 12px;color:#555;">A Texas business just talked to Wittenbot2.0 on saveonbusinessenergy.com.</p>' +
+    '<h2 style="margin:0 0 8px;">New lead from ERBOT</h2>' +
+    '<p style="margin:0 0 12px;color:#555;">A Texas business just talked to ERBOT on saveonbusinessenergy.com.</p>' +
     '<table cellspacing="0" cellpadding="0" style="border-collapse:collapse;font-size:15px;">' +
     row('Name', lead.name) +
     row('Business', lead.business) +
@@ -215,6 +233,11 @@ module.exports = async function handler(req, res) {
         '</pre>'
       : '');
 
+  if (!LEAD_EMAILS.length) {
+    console.error('tex-lead: TEX_LEAD_EMAIL is not configured; lead not emailed.', { callId });
+    return res.status(500).json({ error: 'TEX_LEAD_EMAIL is not configured on the server.' });
+  }
+
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.error('tex-lead: RESEND_API_KEY is not configured; lead not emailed.', { callId });
@@ -230,7 +253,7 @@ module.exports = async function handler(req, res) {
       },
       body: JSON.stringify({
         from: FROM_EMAIL,
-        to: LEAD_EMAIL,
+        to: LEAD_EMAILS,
         subject: subject,
         html: html,
       }),
