@@ -527,3 +527,220 @@ footer a { color: var(--cyan); text-decoration: none; }
 @media (min-width: 900px) {
   .page-content { max-width: 760px; margin: 0 auto; }
 }
+
+/* ---- Talk to Wittenbot2.0 widget ---- */
+.tex-widget {
+  position: fixed;
+  right: 0.8rem;
+  bottom: 0.8rem;
+  z-index: 100;
+  font-family: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.6rem;
+}
+.tex-fab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  min-height: 56px;
+  padding: 0.7rem 1.1rem;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  color: white;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(12, 18, 34, 0.35);
+  text-align: center;
+}
+.tex-fab-title {
+  font-weight: 800;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.tex-fab-sub {
+  font-size: 0.7rem;
+  opacity: 0.95;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.tex-widget.tex-review-in-view .tex-fab {
+  transform: translateY(200%);
+  opacity: 0;
+  pointer-events: none;
+}
+.tex-fab {
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+.tex-panel {
+  width: min(92vw, 380px);
+  max-height: min(62vh, 520px);
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(12, 18, 34, 0.35);
+  overflow: hidden;
+}
+.tex-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.8rem;
+  background: #0C1222;
+  color: white;
+}
+.tex-title {
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+.tex-sub {
+  font-size: 0.7rem;
+  color: #C7D2FE;
+  line-height: 1.3;
+}
+.tex-state {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  background: #1E293B;
+  color: #E0E7FF;
+  white-space: nowrap;
+}
+.tex-state[data-mode="speaking"] {
+  background: #7C3AED;
+  color: white;
+}
+.tex-state[data-mode="listening"] {
+  background: #0891B2;
+  color: white;
+}
+.tex-state[data-mode="error"] {
+  background: #B91C1C;
+  color: white;
+}
+.tex-log {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-height: 120px;
+  background: #F8FAFC;
+}
+.tex-line {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  max-width: 90%;
+}
+.tex-line.tex-user {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+.tex-line.tex-agent {
+  align-self: flex-start;
+}
+.tex-who {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #64748B;
+}
+.tex-text {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  background: white;
+  border: 1px solid var(--border);
+}
+.tex-user .tex-text {
+  background: #EEF2FF;
+  border-color: #C7D2FE;
+}
+.tex-interim {
+  opacity: 0.6;
+}
+.tex-error .tex-text {
+  background: #FEF2F2;
+  border-color: #FECACA;
+  color: #991B1B;
+}
+.tex-controls {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.7rem 0.8rem;
+  border-top: 1px solid var(--border);
+  background: white;
+}
+.tex-btn {
+  flex: 1;
+  min-height: 48px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--navy);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.tex-btn.tex-end {
+  background: #B91C1C;
+  border-color: #B91C1C;
+  color: white;
+}
+.tex-btn.tex-again {
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  border: none;
+  color: white;
+}
+.tex-hint {
+  padding: 0 0.8rem 0.7rem;
+  font-size: 0.7rem;
+  color: #64748B;
+  line-height: 1.4;
+  background: white;
+}
+/* While the review form is on screen, the panel collapses to a compact bar
+   at the top so it can never cover the form's submit button. */
+.tex-widget.tex-review-in-view .tex-panel {
+  position: fixed;
+  top: 0.5rem;
+  right: 0.8rem;
+  left: 0.8rem;
+  width: auto;
+  max-height: none;
+}
+.tex-widget.tex-review-in-view .tex-log,
+.tex-widget.tex-review-in-view .tex-hint {
+  display: none;
+}
+.tex-widget.tex-review-in-view .tex-panel .tex-controls {
+  border-top: none;
+  padding: 0.5rem 0.8rem;
+}
+@media (max-width: 599px) {
+  .tex-widget {
+    right: 0.6rem;
+    bottom: 0.6rem;
+    left: 0.6rem;
+  }
+  .tex-widget .tex-fab {
+    width: 100%;
+  }
+  .tex-widget .tex-panel {
+    width: 100%;
+    max-height: min(58vh, 480px);
+  }
+}
