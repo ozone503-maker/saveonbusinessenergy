@@ -340,6 +340,9 @@ footer a { color: var(--cyan); text-decoration: none; }
   .review {
     background: url("/images/desert-stream-mobile.jpg") center top / cover no-repeat, #0C1222;
   }
+  .hero {
+    min-height: 0;
+  }
 }
 
 @media (min-width: 600px) {
