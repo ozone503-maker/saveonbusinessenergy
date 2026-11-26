@@ -290,6 +290,61 @@ h2 {
   margin-bottom: 0.5rem;
 }
 
+.plain-answer {
+  padding: 2.25rem 1.5rem 0.25rem;
+}
+
+.plain-answer p {
+  max-width: 48rem;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 1.15rem;
+  line-height: 1.65;
+}
+
+.definitions {
+  padding-top: 2.75rem;
+}
+
+.def-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.def-item {
+  background: rgba(255,255,255,0.45);
+  border: 1px solid rgba(74,55,40,0.1);
+  border-radius: 16px;
+  padding: 1.25rem 1.4rem;
+}
+
+.def-item h3 {
+  color: var(--dark-brown);
+  margin-bottom: 0.35rem;
+}
+
+.source-note {
+  margin-top: 0.75rem;
+  font-size: 0.88rem;
+}
+
+.source-note a {
+  color: var(--dark-brown);
+  font-weight: 600;
+}
+
+.check-card .source-note {
+  color: var(--light-brown);
+}
+
+.check-card .source-note a {
+  color: var(--sunset-yellow);
+}
+
+.service-area {
+  margin-top: 0.75rem;
+}
+
 .review-section {
   background: var(--dark-brown);
   color: var(--text-light);

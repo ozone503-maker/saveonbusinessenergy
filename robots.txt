@@ -1,0 +1,66 @@
+# saveonbusinessenergy.com robots.txt
+# Allows Google, Bing, and major AI crawlers.
+# Adjust Disallow rules if private form endpoints should stay unindexed.
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /thank-you
+
+# Search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# OpenAI (ChatGPT / SearchGPT)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# Anthropic (Claude)
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+# Google Gemini / AI Overviews training and grounding
+User-agent: Google-Extended
+Allow: /
+
+# Apple Intelligence / Applebot
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Meta AI
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# Common Crawl (often used as a training source)
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://saveonbusinessenergy.com/sitemap.xml
