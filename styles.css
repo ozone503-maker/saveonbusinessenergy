@@ -413,6 +413,28 @@ footer a { color: var(--cyan); text-decoration: none; }
   font-size: 0.85rem;
   line-height: 1.5;
 }
+.takeaway {
+  background: #EEF2FF;
+  border-left: 3px solid #6366F1;
+  border-radius: 0 8px 8px 0;
+  padding: 0.9rem 0.8rem;
+  margin: 0.8rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--navy);
+  line-height: 1.5;
+}
+.page-content ul, .page-content ol {
+  margin: 0.5rem 0 0.8rem;
+  padding-left: 1.2rem;
+}
+.page-content li {
+  margin-bottom: 0.35rem;
+  line-height: 1.55;
+}
+.insights-group {
+  margin-top: 1.1rem;
+}
 .our-view h2 { margin-top: 0; }
 .article-grid {
   display: flex;
