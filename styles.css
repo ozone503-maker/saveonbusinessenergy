@@ -37,7 +37,7 @@ p, h1, h2, h3, span, a, label, .value, .note, .consent span, footer p {
   top: 0;
   z-index: 100;
   width: 100%;
-  background: #0C1222;
+  background: url("/images/desert-stream.jpg") center/cover no-repeat, #0C1222;
   padding: 0.45rem 0.2rem;
 }
 .nav-links {
@@ -64,7 +64,7 @@ p, h1, h2, h3, span, a, label, .value, .note, .consent span, footer p {
   justify-content: center;
   text-align: center;
   padding: 3rem 0.8rem 2rem;
-  background: #0C1222;
+  background: url("/images/desert-stream.jpg") center/cover no-repeat, #0C1222;
   color: white;
 }
 .hero-content {
@@ -179,7 +179,7 @@ p, h1, h2, h3, span, a, label, .value, .note, .consent span, footer p {
 .step p { font-size: 0.8rem; color: var(--text-muted); }
 
 .review {
-  background: #0C1222;
+  background: url("/images/desert-stream.jpg") center/cover no-repeat, #0C1222;
   color: white;
   padding: 1.8rem 0.8rem;
 }
