@@ -1,5 +1,5 @@
 // POST /api/tex-session
-// Mints a Speko voice session for Wittenbot2.0 (agent_d0fba82181084a1d)
+// Mints a Speko voice session for ERBOT (agent_d0fba82181084a1d)
 // only the short-lived, browser-safe transport credentials.
 // SPEKO_API_KEY never leaves this function. Set it in Vercel:
 // Project Settings -> Environment Variables -> SPEKO_API_KEY.
