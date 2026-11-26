@@ -587,6 +587,9 @@ footer a { color: var(--cyan); text-decoration: none; }
   box-shadow: 0 8px 32px rgba(12, 18, 34, 0.35);
   overflow: hidden;
 }
+.tex-panel[hidden] {
+  display: none;
+}
 .tex-head {
   display: flex;
   align-items: center;
