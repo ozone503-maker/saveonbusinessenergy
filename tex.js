@@ -1,4 +1,4 @@
-// Talk to Wittenbot2.0 — floating voice widget for saveonbusinessenergy.com
+// Talk to ERBOT — floating voice widget for saveonbusinessenergy.com
 // No build step: plain script, loaded with <script src="/tex.js" defer></script>.
 // The @spekoai/client SDK is loaded on demand from esm.sh (pinned 0.0.17)
 // only when the visitor taps the button.
@@ -18,23 +18,23 @@
 
   // ---- Build the UI -------------------------------------------------------
   var root = el('div', 'tex-widget');
-  root.setAttribute('aria-label', 'Talk to Wittenbot2.0');
+  root.setAttribute('aria-label', 'Talk to ERBOT');
 
   var button = el('button', 'tex-fab', null);
   button.type = 'button';
-  button.setAttribute('aria-label', 'Talk to Wittenbot2.0, free Texas energy help');
+  button.setAttribute('aria-label', 'Talk to ERBOT, free Texas energy help');
   button.innerHTML =
-    '<span class="tex-fab-title">Talk to Wittenbot2.0 \uD83E\uDD20</span>' +
+    '<span class="tex-fab-title">Talk to ERBOT \uD83E\uDD20</span>' +
     '<span class="tex-fab-sub">Free Texas energy help</span>';
 
   var panel = el('div', 'tex-panel');
   panel.setAttribute('role', 'dialog');
-  panel.setAttribute('aria-label', 'Conversation with Wittenbot2.0');
+  panel.setAttribute('aria-label', 'Conversation with ERBOT');
   panel.hidden = true;
 
   var head = el('div', 'tex-head');
   var titleWrap = el('div', 'tex-title-wrap');
-  titleWrap.appendChild(el('div', 'tex-title', 'Wittenbot2.0'));
+  titleWrap.appendChild(el('div', 'tex-title', 'ERBOT'));
   titleWrap.appendChild(el('div', 'tex-sub', 'Texas energy expert \u00B7 free'));
   var statePill = el('div', 'tex-state', 'Ready');
   statePill.setAttribute('role', 'status');
@@ -52,7 +52,7 @@
   controls.appendChild(muteBtn);
   controls.appendChild(endBtn);
 
-  var hint = el('div', 'tex-hint', 'Tap the button and just talk. Wittenbot2.0 can check your rate, your contract, and what you could save.');
+  var hint = el('div', 'tex-hint', 'Tap the button and just talk. ERBOT can check your rate, your contract, and what you could save.');
   panel.appendChild(head);
   panel.appendChild(log);
   panel.appendChild(controls);
@@ -93,7 +93,7 @@
     log.innerHTML = '';
     segments.forEach(function (seg) {
       var line = el('div', 'tex-line tex-' + (seg.source === 'user' ? 'user' : 'agent'));
-      var who = el('span', 'tex-who', seg.source === 'user' ? 'You' : 'Wittenbot2.0');
+      var who = el('span', 'tex-who', seg.source === 'user' ? 'You' : 'ERBOT');
       var body = el('span', 'tex-text' + (seg.isFinal === false ? ' tex-interim' : ''), seg.text);
       line.appendChild(who);
       line.appendChild(body);
@@ -161,7 +161,7 @@
       if (!r.ok) throw new Error(data.error || ('Server error ' + r.status));
       session = data;
     } catch (err) {
-      showError('Wittenbot2.0 is not switched on yet. ' + (err.message || 'Please try again in a minute.'));
+      showError('ERBOT is not switched on yet. ' + (err.message || 'Please try again in a minute.'));
       starting = false;
       return;
     }
@@ -179,7 +179,7 @@
         onDisconnect: function () { endCallUI('Call ended'); },
         onMessage: function (m) { addMessage(m); },
         onModeChange: function (mode) {
-          if (mode === 'speaking') setState('Wittenbot2.0 is speaking…', 'speaking');
+          if (mode === 'speaking') setState('ERBOT is speaking…', 'speaking');
           else setState('Listening…', 'listening');
         },
         onStatusChange: function (status) {
