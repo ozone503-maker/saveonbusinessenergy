@@ -150,6 +150,45 @@ p, h1, h2, h3, span, a, label, .value, .note, .consent span, footer p {
   max-width: 100%;
 }
 
+.dual-callout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.9rem 0.8rem;
+  background: white;
+  box-sizing: border-box;
+}
+.callout {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.95rem 1rem 0.9rem;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+.callout::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+}
+.callout h2 {
+  font-size: 1.05rem;
+  color: var(--navy);
+  margin-bottom: 0.3rem;
+  line-height: 1.25;
+}
+.callout p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
 .value-strip {
   display: flex;
   flex-wrap: wrap;
@@ -368,6 +407,17 @@ footer a { color: var(--cyan); text-decoration: none; }
   }
 }
 
+@media (min-width: 700px) {
+  .dual-callout {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 1.1rem 1rem 1.2rem;
+    background: transparent;
+  }
+  .callout { background: white; }
+}
 @media (min-width: 600px) {
   .nav-links a { font-size: 0.75rem; padding: 0.6rem 0.4rem; }
   .hero { min-height: 75vh; }
