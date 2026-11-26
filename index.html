@@ -13,6 +13,7 @@
   <nav class="nav">
     <a href="/" class="logo">Save on Business Energy</a>
     <div class="nav-links">
+      <a href="tel:[PLACEHOLDER PHONE]" class="phone-link">[PLACEHOLDER PHONE]</a>
       <a href="/how-it-works.html">How It Works</a>
       <a href="/faq.html">FAQ</a>
       <a href="#review" class="nav-cta">Free Review</a>
@@ -35,10 +36,10 @@
     <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <h1>Texas businesses are overpaying for electricity.</h1>
-      <p class="value">Free commercial bill review. See what you could save. No fee to you.</p>
-      <a href="#review" class="cta-button">Get My Free Review</a>
-      <p class="note">Takes 60 seconds. We reply within one business day.</p>
+      <h1>Your business may be paying too much for electricity.</h1>
+      <p class="value">Find out whether your commercial electricity contract is competitive. Free independent review. No fee to your business. No obligation to switch.</p>
+      <a href="#review" class="cta-button">Check My Business for Savings</a>
+      <p class="note">Takes about a minute. We reply within one business day.</p>
     </div>
   </header>
 
@@ -48,13 +49,23 @@
     <div class="value-item">Better commercial rates</div>
   </section>
 
+  <section class="who">
+    <p>Independent lead generator. Brokerage services provided by USA Energy Partners, a PUCT-registered broker #[PLACEHOLDER]. No fee billed to your business. We are not a retail electric provider.</p>
+  </section>
+
+  <section class="urgency">
+    <h2>When a fixed contract ends</h2>
+    <p>Many businesses roll onto a much higher month-to-month or holdover rate after the fixed term expires. Start comparing before that happens.</p>
+    <a href="#review" class="cta-button">Check before your contract ends</a>
+  </section>
+
   <section class="how">
     <h2>How it works</h2>
     <div class="steps">
       <div class="step">
         <div class="num">1</div>
-        <h3>Send your bill</h3>
-        <p>Upload a recent commercial electricity bill.</p>
+        <h3>Send your bill (or tell us a bit)</h3>
+        <p>Upload a recent commercial electricity bill, or start without one.</p>
       </div>
       <div class="step">
         <div class="num">2</div>
@@ -70,30 +81,67 @@
     <p style="margin-top:2rem;"><a href="/how-it-works.html">Learn more about Texas commercial electricity →</a></p>
   </section>
 
+  <section class="proof">
+    <h2>What businesses see</h2>
+    <div class="testimonial">
+      <p>“[PLACEHOLDER: Real USAEP result. Example: A [industry] in [city] was able to lower their rate after reviewing contract language and power factor.]”</p>
+      <p class="source">— [PLACEHOLDER name / business type]</p>
+    </div>
+  </section>
+
   <section class="review" id="review">
     <h2>Get your free review</h2>
-    <p>Send your last commercial electricity bill. We’ll show you what we find.</p>
+    <p>Two easy ways to start. We’ll follow up by email or phone within one business day.</p>
+
+    <div class="path-toggle">
+      <button type="button" id="path-bill" class="path-btn active">I have a bill</button>
+      <button type="button" id="path-nobill" class="path-btn">No bill handy</button>
+    </div>
+
     <form id="lead-form" class="lead-form">
+      <div id="bill-path">
+        <label class="file-label">
+          <span>Upload bill (PDF or photo)</span>
+          <input type="file" name="bill" accept="image/*,.pdf" capture="environment">
+        </label>
+      </div>
+      <div id="nobill-path" style="display:none;">
+        <select name="monthly_spend">
+          <option value="">Estimated monthly electric spend</option>
+          <option>Under $500</option>
+          <option>$500–$2,000</option>
+          <option>$2,000–$5,000</option>
+          <option>$5,000+</option>
+          <option>Not sure</option>
+        </select>
+      </div>
+
+      <input type="text" name="business" placeholder="Business name" required>
       <input type="text" name="name" placeholder="Your name" required>
       <input type="email" name="email" placeholder="Work email" required>
-      <input type="text" name="business" placeholder="Business name">
-      <input type="tel" name="phone" placeholder="Phone (optional)">
-      <label class="file-label">
-        <span>Upload bill (PDF or photo)</span>
-        <input type="file" name="bill" accept="image/*,.pdf">
+      <input type="tel" name="phone" placeholder="Phone" required>
+      <input type="text" name="zip" placeholder="Business ZIP" required>
+      <input type="text" name="contract_end" placeholder="When does your current contract end? (month/year or not sure)">
+
+      <label class="consent">
+        <input type="checkbox" name="consent" required>
+        <span>I agree to be contacted by phone, text, and email by Save on Business Energy and its partner USA Energy Partners. Consent is not required to purchase. Message and data rates may apply. See our <a href="/privacy.html">Privacy Policy</a> and <a href="/terms.html">Terms</a>.</span>
       </label>
-      <button type="submit" class="cta-button">Send My Bill</button>
+
+      <button type="submit" class="cta-button">Send My Request</button>
     </form>
+
     <div id="form-success" class="success" style="display:none;">
-      Got it. We’ll review and follow up within one business day.
+      Got it. We’ll review and follow up by email or phone within one business day.
     </div>
-    <p class="privacy">No fee to your business. Your info stays private. <a href="/faq.html" style="color:var(--yellow);">Questions? See the FAQ</a></p>
+    <p class="privacy">No fee to your business. <a href="/privacy.html">Privacy Policy</a> · <a href="/terms.html">Terms</a></p>
   </section>
 
   <footer>
     <p>Save on Business Energy — Free commercial electricity reviews for Texas businesses.</p>
-    <p><a href="/how-it-works.html">How it works</a> · <a href="/faq.html">FAQ</a></p>
-    <p class="disclaimer">Independent lead generation. We are not a retail electric provider. No fee is billed to your business for this service.</p>
+    <p><a href="tel:[PLACEHOLDER PHONE]">[PLACEHOLDER PHONE]</a> · <a href="mailto:[PLACEHOLDER EMAIL]">[PLACEHOLDER EMAIL]</a></p>
+    <p><a href="/how-it-works.html">How it works</a> · <a href="/faq.html">FAQ</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p>
+    <p class="disclaimer">Independent lead generation. Brokerage services provided through USA Energy Partners. We are not a retail electric provider. No fee is billed to your business for this service. PUCT broker registration #[PLACEHOLDER].</p>
   </footer>
 
   <script src="script.js"></script>
