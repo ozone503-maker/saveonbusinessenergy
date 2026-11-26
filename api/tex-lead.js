@@ -8,7 +8,9 @@
 //   - Add these extraction fields on the endpoint (or on the agent):
 //       name (string), business_name (string), email (string),
 //       phone (string), zip (string), monthly_spend (string),
-//       contract_end_date (string), consent (boolean)
+//       contract_end (string), consent (boolean)
+//     Speko's field is `contract_end`; the endpoint also accepts
+//     `contract_end_date` and `end_date` as aliases.
 //     Speko fills them from the transcript; each arrives in `custom_data`
 //     (null when the call gave no value). This endpoint also falls back to
 //     reading email / phone / ZIP out of the transcript text itself.
