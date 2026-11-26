@@ -7,7 +7,6 @@
   --text-muted: #64748B;
   --cyan: #00D4FF;
   --purple: #A78BFA;
-  --purple-deep: #7C3AED;
   --accent: #A78BFA;
   --border: #E0E7FF;
   --glow: rgba(167, 139, 250, 0.3);
@@ -82,24 +81,34 @@ body {
 
 .hero {
   position: relative;
-  min-height: 65vh;
+  min-height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 4.5rem 1rem 3rem;
-  background: linear-gradient(180deg, #0C1222 0%, #1E1B4B 60%, #312E81 100%);
+  padding: 5rem 1rem 3.5rem;
+  background: url("/hero.jpg") center/cover no-repeat;
   color: white;
   width: 100%;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(12,18,34,0.62) 0%, rgba(30,27,75,0.5) 50%, rgba(12,18,34,0.68) 100%);
+  z-index: 1;
 }
 .hero-content {
   position: relative;
   z-index: 2;
   max-width: 100%;
-  padding: 0 0.5rem;
+  padding: 0 0.8rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 .hero h1 {
-  font-size: clamp(1.6rem, 6vw, 2.6rem);
+  font-size: clamp(1.55rem, 5.5vw, 2.6rem);
   font-weight: 700;
   line-height: 1.15;
   margin-bottom: 0.8rem;
@@ -108,17 +117,20 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   word-wrap: break-word;
+  hyphens: auto;
 }
 .value {
   font-size: 1rem;
   margin-bottom: 1.4rem;
-  color: #C7D2FE;
+  color: #E0E7FF;
   word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
 }
 .note {
   margin-top: 0.7rem;
   font-size: 0.85rem;
-  color: #A5B4FC;
+  color: #C7D2FE;
 }
 
 .cta-button {
@@ -416,7 +428,7 @@ footer a:hover { text-decoration: underline; }
   .nav-links { gap: 0.5rem; flex-wrap: nowrap; }
   .nav-links a { font-size: 0.9rem; padding: 0.4rem 0.75rem; }
   .nav-cta { font-size: 0.9rem; padding: 0.45rem 1rem; }
-  .hero { min-height: 75vh; padding: 5.5rem 1.5rem 4rem; }
+  .hero { min-height: 80vh; padding: 6rem 1.5rem 4rem; }
   .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); }
   .steps { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
   .lead-form { max-width: 480px; }
