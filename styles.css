@@ -81,19 +81,34 @@ body {
   justify-content: center;
   text-align: center;
   padding: 4rem 1.5rem 6rem;
-  background: linear-gradient(180deg, #FF9A56 0%, #FF7A45 30%, #E67E22 60%, #D4A574 100%);
+  background-color: var(--deep-brown);
   overflow: hidden;
 }
 
-.sunset-glow {
+.hero-photo {
   position: absolute;
-  bottom: -20%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 140%;
-  height: 60%;
-  background: radial-gradient(ellipse at center, rgba(255,179,71,0.6) 0%, transparent 70%);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 62% center;
+  z-index: 0;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(32, 16, 8, 0.9) 0%,
+    rgba(48, 24, 12, 0.82) 30%,
+    rgba(48, 24, 12, 0.7) 58%,
+    rgba(36, 18, 10, 0.58) 82%,
+    rgba(24, 12, 6, 0.22) 100%
+  );
 }
 
 .hero-content {
@@ -104,26 +119,30 @@ body {
 
 .hero h1 {
   font-size: clamp(2.4rem, 6vw, 4.2rem);
-  color: var(--deep-brown);
+  color: var(--text-light);
   font-weight: 800;
   line-height: 1.1;
   margin-bottom: 1rem;
-  text-shadow: 0 2px 10px rgba(255,255,255,0.3);
+  text-shadow: 0 2px 18px rgba(20, 8, 4, 0.55);
 }
 
 .subtitle {
   font-size: 1.4rem;
-  color: var(--dark-brown);
+  color: var(--text-light);
   margin-bottom: 0.5rem;
   font-weight: 500;
 }
 
 .tagline {
   font-size: 1rem;
-  color: var(--deep-brown);
-  opacity: 0.85;
+  color: var(--light-brown);
   margin-bottom: 2rem;
   letter-spacing: 0.05em;
+}
+
+.hero .cta-button {
+  border: 2px solid var(--sunset-yellow);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .cta-button {
@@ -145,67 +164,6 @@ body {
   background: var(--deep-brown);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(74,55,40,0.4);
-}
-
-/* Cacti */
-.cactus {
-  position: absolute;
-  bottom: 0;
-  width: 80px;
-  height: 160px;
-  background: var(--dark-brown);
-  border-radius: 40px 40px 0 0;
-  opacity: 0.7;
-  animation: sway 6s ease-in-out infinite;
-}
-
-.cactus::before,
-.cactus::after {
-  content: '';
-  position: absolute;
-  background: var(--dark-brown);
-  border-radius: 30px;
-}
-
-.cactus::before {
-  width: 40px;
-  height: 80px;
-  left: -25px;
-  top: 40px;
-  transform: rotate(-15deg);
-}
-
-.cactus::after {
-  width: 40px;
-  height: 70px;
-  right: -25px;
-  top: 50px;
-  transform: rotate(15deg);
-}
-
-.cactus-left {
-  left: 5%;
-  animation-delay: 0s;
-}
-
-.cactus-right {
-  right: 5%;
-  animation-delay: -3s;
-  transform: scale(0.85);
-}
-
-@keyframes sway {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(2deg); }
-}
-
-.cactus-right {
-  animation-name: sway-right;
-}
-
-@keyframes sway-right {
-  0%, 100% { transform: scale(0.85) rotate(0deg); }
-  50% { transform: scale(0.85) rotate(-2deg); }
 }
 
 /* Sections */
@@ -390,8 +348,16 @@ footer {
     min-height: 80vh;
     padding: 3rem 1rem;
   }
-  .cactus {
-    display: none;
+  .hero-photo {
+    object-position: 58% 40%;
+  }
+  .hero::after {
+    background: linear-gradient(
+      100deg,
+      rgba(32, 16, 8, 0.9) 0%,
+      rgba(44, 22, 12, 0.8) 48%,
+      rgba(36, 18, 10, 0.7) 100%
+    );
   }
   section {
     padding: 3rem 1rem;
