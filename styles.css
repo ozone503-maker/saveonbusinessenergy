@@ -80,14 +80,14 @@ body {
   justify-content: center;
   text-align: center;
   padding: 6rem 1.5rem 4rem;
-  background: url('/images/hero.jpg') center/cover no-repeat;
+  background: url('DATAURL_PLACEHOLDER') center/cover no-repeat;
   color: white;
 }
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(12,18,34,0.55) 0%, rgba(30,27,75,0.65) 100%);
+  background: linear-gradient(180deg, rgba(12,18,34,0.5) 0%, rgba(30,27,75,0.6) 100%);
   z-index: 1;
 }
 .hero-content {
@@ -100,19 +100,19 @@ body {
   font-weight: 700;
   line-height: 1.15;
   margin-bottom: 1rem;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+  text-shadow: 0 2px 16px rgba(0,0,0,0.7);
 }
 .value {
   font-size: 1.2rem;
   margin-bottom: 1.8rem;
   color: #E0E7FF;
-  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+  text-shadow: 0 1px 10px rgba(0,0,0,0.6);
 }
 .note {
   margin-top: 1rem;
   font-size: 0.95rem;
   color: #C7D2FE;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
 }
 
 .cta-button {
