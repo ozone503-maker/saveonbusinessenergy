@@ -31,53 +31,37 @@ body {
   top: 0;
   z-index: 100;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 0.75rem 1rem;
+  padding: 0.6rem 0.5rem;
   background: linear-gradient(90deg, #0C1222 0%, #1E1B4B 100%);
   color: white;
   box-shadow: 0 2px 16px var(--glow);
   width: 100%;
 }
-.nav .logo {
-  font-weight: 700;
-  background: linear-gradient(90deg, var(--cyan), var(--purple));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-decoration: none;
-  font-size: 1rem;
-  white-space: nowrap;
-}
 .nav-links {
   display: flex;
-  gap: 0.3rem;
+  gap: 0;
   align-items: center;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: space-evenly;
+  width: 100%;
+  max-width: 100%;
 }
 .nav-links a {
   color: #E0E7FF;
   text-decoration: none;
   font-weight: 500;
-  font-size: 0.8rem;
-  padding: 0.3rem 0.5rem;
+  font-size: 0.85rem;
+  padding: 0.45rem 0.4rem;
   border-radius: 6px;
+  text-align: center;
+  flex: 1;
   white-space: nowrap;
 }
 .nav-links a:hover {
   background: rgba(167, 139, 250, 0.15);
   color: white;
 }
-.nav-cta {
-  background: linear-gradient(90deg, var(--cyan), var(--purple));
-  color: white !important;
-  padding: 0.35rem 0.7rem;
-  border-radius: 6px;
-  font-weight: 700;
-  font-size: 0.8rem;
-}
-.nav-cta:hover { filter: brightness(1.1); }
 
 .hero {
   position: relative;
@@ -137,11 +121,12 @@ body {
   display: inline-block;
   background: linear-gradient(90deg, var(--cyan), var(--purple));
   color: white;
-  padding: 0.85rem 1.5rem;
+  padding: 0.95rem 2rem;
   border-radius: 8px;
   text-decoration: none;
-  font-weight: 700;
-  font-size: 1rem;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
   border: none;
   cursor: pointer;
   transition: all 0.15s;
@@ -424,10 +409,7 @@ footer a:hover { text-decoration: underline; }
 
 @media (min-width: 769px) {
   .nav { padding: 0.85rem 1.5rem; }
-  .nav .logo { font-size: 1.1rem; }
-  .nav-links { gap: 0.5rem; flex-wrap: nowrap; }
-  .nav-links a { font-size: 0.9rem; padding: 0.4rem 0.75rem; }
-  .nav-cta { font-size: 0.9rem; padding: 0.45rem 1rem; }
+  .nav-links a { font-size: 0.95rem; padding: 0.5rem 0.8rem; }
   .hero { min-height: 80vh; padding: 6rem 1.5rem 4rem; }
   .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); }
   .steps { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
