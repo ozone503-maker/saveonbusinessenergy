@@ -74,14 +74,21 @@ body {
 
 .hero {
   position: relative;
-  min-height: 70vh;
+  min-height: 85vh;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 5rem 1.5rem 4rem;
-  background: linear-gradient(180deg, #0C1222 0%, #1E1B4B 60%, #312E81 100%);
+  padding: 6rem 1.5rem 4rem;
+  background: url('/images/hero.jpg') center/cover no-repeat;
   color: white;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(12,18,34,0.55) 0%, rgba(30,27,75,0.65) 100%);
+  z-index: 1;
 }
 .hero-content {
   position: relative;
@@ -93,20 +100,19 @@ body {
   font-weight: 700;
   line-height: 1.15;
   margin-bottom: 1rem;
-  background: linear-gradient(90deg, var(--cyan), var(--purple));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.6);
 }
 .value {
   font-size: 1.2rem;
   margin-bottom: 1.8rem;
-  color: #C7D2FE;
+  color: #E0E7FF;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
 }
 .note {
   margin-top: 1rem;
   font-size: 0.95rem;
-  color: #A5B4FC;
+  color: #C7D2FE;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.4);
 }
 
 .cta-button {
@@ -354,7 +360,7 @@ footer a:hover { text-decoration: underline; }
   .nav { flex-direction: column; gap: 0.6rem; padding: 0.7rem 1rem; }
   .nav-links { gap: 0.3rem; justify-content: center; flex-wrap: wrap; }
   .nav-links a { font-size: 0.85rem; padding: 0.35rem 0.6rem; }
-  .hero { min-height: auto; padding: 3.5rem 1.2rem 3rem; }
+  .hero { min-height: 70vh; padding: 4rem 1.2rem 3rem; }
   .value-strip { gap: 1rem; font-size: 0.95rem; }
   .cta-button { padding: 0.95rem 1.5rem; width: 100%; max-width: 320px; }
   .lead-form input, .lead-form select, .file-label { font-size: 16px; }
