@@ -529,6 +529,9 @@ footer a { color: var(--cyan); text-decoration: none; }
 }
 
 /* ---- Talk to Wittenbot2.0 widget ---- */
+.tex-widget [hidden] {
+  display: none !important;
+}
 .tex-widget {
   position: fixed;
   right: 0.8rem;
