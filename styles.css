@@ -315,6 +315,19 @@ p, h1, h2, h3, span, a, label, .value, .note, .consent span, footer p {
   max-width: 100%;
   padding: 0 0.2rem;
   box-sizing: border-box;
+  position: relative;
+}
+.hp-field {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 .lead-form input:not([type="checkbox"]),
 .lead-form select,
@@ -371,6 +384,21 @@ p, h1, h2, h3, span, a, label, .value, .note, .consent span, footer p {
   font-weight: 600;
   font-size: 0.8rem;
   margin: 0.4rem 0;
+}
+.form-error {
+  background: #FEF2F2;
+  color: #7F1D1D;
+  border: 1px solid #FECACA;
+  padding: 0.7rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  text-align: left;
+  margin: 0;
+}
+.lead-form .cta-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
 }
 .privacy {
   font-size: 0.7rem;
