@@ -16,9 +16,12 @@ hosts the hidden dashboard and the Postgres database. Jessie + Muse only.
    and Gavin sign in with a 6-digit code emailed to them (Resend, 15
    minutes, single use) or the magic link in that same email. No
    password to remember or type. See `api/_auth.js` + `api/leads-auth.js`.
-2. **Bulk ingestion.** The dashboard eats entire mailing lists: upload a
-   CSV, map the columns, and the Ingestor dedupes, aggregates, and
-   labels every row with who gave it to us. See `api/ingest.js`.
+2. **Bulk ingestion.** The dashboard eats entire mailing lists in
+   whatever shape they're in — CSV, spreadsheet (.xlsx/.xls, read
+   right in the browser), or a photo of a list (queued, read on the
+   next run). Upload, map the columns, and the Ingestor dedupes,
+   aggregates, and labels every row with who gave it to us. See
+   `api/ingest.js` + `api/ingest-photo.js`.
 3. **Giant email repository + weekly megablasts.** `contacts` is one row
    per email, with source, contributor, tags, consent, and unsubscribe
    tracked. Campaigns (news / pain-point) become blasts, and a blast is
@@ -117,11 +120,43 @@ numbers — like an administrative assistant.
 5. **New role in CREW.md:** Lead Agent — reads and reports only. It
    never sends, approves, or changes anything.
 
+## What changed in v6 — any shape of list (Jessie's order, 2026-11-27)
+
+Front end accepts everything — Grok lists included, any list from
+anyone. Backend stays Jessie + Muse only, Gavin later: no outside bot
+runs the backend or the agents.
+
+1. **Spreadsheet, direct.** `.xlsx` / `.xls` files upload as-is — no
+   more "export to CSV first". The browser reads the first sheet
+   (first row = headers, any order/casing) with the vendored SheetJS
+   reader (`vendor/xlsx.full.min.js`, served from the site itself, no
+   CDN, no new server dependency), then the same column-matching +
+   import flow as CSV. Same 5,000-row cap, same rules.
+2. **Photo of a list.** JPG/PNG (up to 3 MB) uploads too. There is no
+   OCR service on this stack, so a photo is QUEUED, not imported on
+   the spot: `api/ingest-photo.js` stores it (`uploads` row, status
+   `queued`, file_type `photo` + `upload_files` row holding the image)
+   and the next scheduled run reads it and imports the rows through
+   `/api/ingest` under the same contributor label and rules. The page
+   says so plainly: "Photo lists get read on the next run — check back
+   after it runs." The run clears the image data after import; the
+   record stays for audit.
+3. **Contributor still required on every upload, whatever the shape**
+   — front end accepts everything, and every row is still labelled
+   with who gave it to us.
+4. **Migration needed (not yet run live):**
+   `lead-engine/migrations/001-any-shape-uploads.sql` — adds
+   `uploads.file_type`, the `queued` status, and the `upload_files`
+   table. Run it once against the live Neon database before the first
+   photo upload; CSV/xlsx uploads work without it. `schema.sql` itself
+   already carries the v6 columns for a fresh install.
+
 ## Files
 
 | File | What it is |
 |---|---|
-| `SCHEMA.md` + `schema.sql` | Postgres: v1 `leads`, `memory`, `directions` + v2 `contributors`, `uploads`, `contacts`, `campaigns`, `blasts` + v3 `agents`, `agent_versions`, `route_ideas`, `daily_counts` + v5 `questions`. `login_codes` / `login_sessions` RETIRED in v3. Run `schema.sql` once, after provisioning. |
+| `SCHEMA.md` + `schema.sql` | Postgres: v1 `leads`, `memory`, `directions` + v2 `contributors`, `uploads`, `contacts`, `campaigns`, `blasts` + v3 `agents`, `agent_versions`, `route_ideas`, `daily_counts` + v5 `questions` + v6 `uploads.file_type` / `queued` status / `upload_files`. `login_codes` / `login_sessions` RETIRED in v3. Run `schema.sql` once, after provisioning. |
+| `lead-engine/migrations/001-any-shape-uploads.sql` | v6 migration for the live DB — adds `uploads.file_type`, the `queued` status, and `upload_files`. Run once against Neon before the first photo upload. |
 | `leads.html` | Hidden dashboard (unlisted, `noindex`, no public links). NO LOGIN — opens straight to the dashboard. v4 simplified: How-to note, Today number, Add leads + Send email big buttons, lead cards with Approve / Skip, everything else behind one closed More section with one plain-words dropdown per job. v5: Ask the lead agent box under Today. |
 | `api/_db.js` | Shared Postgres pool (`pg`, not installed yet) + public-row presenters for leads, contacts, campaigns, blasts, uploads. |
 | `api/_auth.js` | v3: NO AUTH. Open-access note + audit-only author helper. No login check, no session, no code. |
@@ -129,7 +164,9 @@ numbers — like an administrative assistant.
 | `api/leads.js` | GET list (filter by status/route/city), POST approve/reject. No browser lead creation, no `contacted` from here. |
 | `api/directions.js` | GET directions, POST a new one (Jessie / Gavin / bot name, audit only). |
 | `api/memory.js` | GET memory. Read-only from the browser; the run writes it. |
-| `api/ingest.js` | POST a contributor + JSON rows (browser parses the CSV). Dedupe on email + business+city, label with contributor, flag bad / out-of-territory rows for review. GET lists uploads + contributors. |
+| `api/ingest.js` | POST a contributor + JSON rows (browser parses the file — CSV, or a spreadsheet read with the vendored SheetJS reader). Dedupe on email + business+city, label with contributor, flag bad / out-of-territory rows for review. GET lists uploads + contributors. |
+| `api/ingest-photo.js` | POST a photo of a list (JPG/PNG, up to 3 MB) + contributor — queues it (status `queued`, file_type `photo`, image in `upload_files`) for the next run to read and import. GET lists queued photos; GET ?upload_id=N returns the full image for the run. |
+| `vendor/xlsx.full.min.js` | Vendored SheetJS 0.20.3 reader, served from the site — the browser reads .xlsx/.xls with no new server dependency and no CDN. |
 | `api/blasts.js` | Campaigns + blasts. Build (audience count + preview, draft), approve (arms, does not send), send (approved + confirm:true only), unsubscribe (public). |
 | `CREW.md` | The crew: Orchestrator, Hunter, Ingestor, Enricher, Campaign Writer, Blast Manager, Route Scout, Maintenance Bot (now rebuilds agents from pasted chunks), Lead Agent (answers questions from the real numbers). Goal: 200 new addresses/day. |
 | `api/reprogram.js` | Rebuild an agent from a large pasted chunk (up to 50,000 chars). New version, never overwrites history, hard rules still bind it. |
