@@ -350,3 +350,18 @@ DROP TRIGGER IF EXISTS daily_counts_touch ON daily_counts;
 CREATE TRIGGER daily_counts_touch
   BEFORE UPDATE ON daily_counts
   FOR EACH ROW EXECUTE FUNCTION lead_engine_touch_updated_at();
+
+-- ---------------------------------------------------------------- v4: questions (Lead Agent's log)
+-- Every question Gavin or Jessie asks the Lead Agent, and the answer it
+-- gave. Best effort: if the log insert fails, the answer still goes out.
+-- The Lead Agent answers from the database only — it never invents a
+-- number, so this log is the audit trail for what it said.
+CREATE TABLE IF NOT EXISTS questions (
+  id         SERIAL PRIMARY KEY,
+  question   TEXT NOT NULL,
+  answer     TEXT NOT NULL,
+  author     TEXT NOT NULL DEFAULT 'Jessie',
+  asked_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS questions_asked_idx ON questions (asked_at DESC);
