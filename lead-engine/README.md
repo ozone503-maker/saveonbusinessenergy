@@ -151,6 +151,31 @@ runs the backend or the agents.
    photo upload; CSV/xlsx uploads work without it. `schema.sql` itself
    already carries the v6 columns for a fresh install.
 
+## What changed in v7 — the run's write path + first real hunt (2026-11-27)
+
+1. **Write path, built first.** Muse cannot reach Postgres directly —
+   the connection string lives in Vercel env vars only, and there is
+   no Neon CLI/MCP access from Muse (the Neon agent-setup page failed
+   a safety check, so that route is closed). So the run writes hunted
+   leads through a new endpoint, `api/write-lead.js`: POST
+   `{author, leads: [...]}`. It validates every row (business, city,
+   real source URL, route in ercot-queue / tx-permits /
+   maps-comptroller; Austin / San Antonio rejected), dedupes on email
+   and business+city (collisions count as duplicates, never errors),
+   inserts the lead + contact, and refreshes today's `daily_counts`
+   from the real tables. It is the ONLY write path for hunted leads —
+   never use `/api/ingest` for a hunt (it labels everything
+   'referral upload' / 'referral-partners'). RUNBOOK step 0 and step 7
+   were corrected: the old "Muse reaches the DB directly" line was
+   wrong for this setup.
+2. **First real hunt.** Routes 1–3 only (ERCOT queue, TX permits,
+   Maps + Comptroller), deregulated Texas only, every lead sourced
+   with a real URL, no-contact-yet when a decision-maker can't be
+   sourced. 25–40 leads in the first batch.
+3. **Migration 001 is now run live** (2026-11-27 18:32 HST) — the
+   "not yet run live" note in v6 above is stale: `uploads.file_type`
+   and `upload_files` exist in Neon, so photo uploads work end to end.
+
 ## Files
 
 | File | What it is |
@@ -172,6 +197,7 @@ runs the backend or the agents.
 | `api/reprogram.js` | Rebuild an agent from a large pasted chunk (up to 50,000 chars). New version, never overwrites history, hard rules still bind it. |
 | `api/goal.js` | Goal Tracker counts: today vs 200, this week, breakdown by route/contributor. |
 | `api/ask.js` | Lead Agent: POST a question, get a plain-words answer computed from the database. Never invents a number; logs to `questions`. |
+| `api/write-lead.js` | The run's write path for hunted leads: POST sourced leads (routes ercot-queue / tx-permits / maps-comptroller), validates + dedupes, refreshes daily_counts. Only write path for hunts. |
 | `api/scout.js` | Route Scout idea log: propose an idea, mark it trying/worked/flopped with the address count. |
 | `CAMPAIGNS.md` | Campaign menu: news-story template + 16 pain-point campaigns seeded by the live articles. |
 | `RUNBOOK.md` | How a scheduled Muse run works in v2, step by step, with the exact lead record and the no-outreach rule. |
