@@ -93,12 +93,36 @@ API, audience, ingest, enrich, orchestrator, or reprogram jargon, and no
 "another bot" wording. The page says Jessie + Muse, Gavin joins later.
 Underlying API field names are unchanged, so nothing breaks.
 
+## What changed in v5 — Lead Agent, the admin assistant (Jessie's order, 2026-11-27)
+
+Gavin (or Jessie) asks a question and gets a fast answer from the real
+numbers — like an administrative assistant.
+
+1. **Ask the lead agent** — a box on the main view, right under Today
+   and above Add leads: a text input + Ask button, answer shows below
+   in plain words. Three quick-tap examples underneath: "How many
+   emails total?", "How many in Dallas?", "What are the latest pain
+   points?" See `api/ask.js`.
+2. **No LLM call, no invented numbers.** The answer is computed from
+   database rows: total emails, emails/leads in any city, leads total,
+   today vs 200, latest pain points, latest leads, unsubscribed count,
+   who gave us lists. Anything it can't answer from the database gets
+   a plain "I don't have that from the list yet" plus the list of
+   questions it CAN answer.
+3. **Honest limit:** until Postgres is provisioned, Ask answers "The
+   list isn't live yet — the database isn't set up, so I have no
+   numbers yet." That is by design, not a bug.
+4. **Log.** Every question + answer goes to a new `questions` table
+   (best effort — a log failure never blocks the answer).
+5. **New role in CREW.md:** Lead Agent — reads and reports only. It
+   never sends, approves, or changes anything.
+
 ## Files
 
 | File | What it is |
 |---|---|
-| `SCHEMA.md` + `schema.sql` | Postgres: v1 `leads`, `memory`, `directions` + v2 `contributors`, `uploads`, `contacts`, `campaigns`, `blasts` + v3 `agents`, `agent_versions`, `route_ideas`, `daily_counts`. `login_codes` / `login_sessions` RETIRED in v3. Run `schema.sql` once, after provisioning. |
-| `leads.html` | Hidden dashboard (unlisted, `noindex`, no public links). NO LOGIN — opens straight to the dashboard. v4 simplified: How-to note, Today number, Add leads + Send email big buttons, lead cards with Approve / Skip, everything else behind one closed More section with one plain-words dropdown per job. |
+| `SCHEMA.md` + `schema.sql` | Postgres: v1 `leads`, `memory`, `directions` + v2 `contributors`, `uploads`, `contacts`, `campaigns`, `blasts` + v3 `agents`, `agent_versions`, `route_ideas`, `daily_counts` + v5 `questions`. `login_codes` / `login_sessions` RETIRED in v3. Run `schema.sql` once, after provisioning. |
+| `leads.html` | Hidden dashboard (unlisted, `noindex`, no public links). NO LOGIN — opens straight to the dashboard. v4 simplified: How-to note, Today number, Add leads + Send email big buttons, lead cards with Approve / Skip, everything else behind one closed More section with one plain-words dropdown per job. v5: Ask the lead agent box under Today. |
 | `api/_db.js` | Shared Postgres pool (`pg`, not installed yet) + public-row presenters for leads, contacts, campaigns, blasts, uploads. |
 | `api/_auth.js` | v3: NO AUTH. Open-access note + audit-only author helper. No login check, no session, no code. |
 | `api/leads-auth.js` | RETIRED in v3 — answers 410 Gone. Do not revive without Jessie's order. |
@@ -107,9 +131,10 @@ Underlying API field names are unchanged, so nothing breaks.
 | `api/memory.js` | GET memory. Read-only from the browser; the run writes it. |
 | `api/ingest.js` | POST a contributor + JSON rows (browser parses the CSV). Dedupe on email + business+city, label with contributor, flag bad / out-of-territory rows for review. GET lists uploads + contributors. |
 | `api/blasts.js` | Campaigns + blasts. Build (audience count + preview, draft), approve (arms, does not send), send (approved + confirm:true only), unsubscribe (public). |
-| `CREW.md` | The crew: Orchestrator, Hunter, Ingestor, Enricher, Campaign Writer, Blast Manager, Route Scout, Maintenance Bot (now rebuilds agents from pasted chunks). Goal: 200 new addresses/day. |
+| `CREW.md` | The crew: Orchestrator, Hunter, Ingestor, Enricher, Campaign Writer, Blast Manager, Route Scout, Maintenance Bot (now rebuilds agents from pasted chunks), Lead Agent (answers questions from the real numbers). Goal: 200 new addresses/day. |
 | `api/reprogram.js` | Rebuild an agent from a large pasted chunk (up to 50,000 chars). New version, never overwrites history, hard rules still bind it. |
 | `api/goal.js` | Goal Tracker counts: today vs 200, this week, breakdown by route/contributor. |
+| `api/ask.js` | Lead Agent: POST a question, get a plain-words answer computed from the database. Never invents a number; logs to `questions`. |
 | `api/scout.js` | Route Scout idea log: propose an idea, mark it trying/worked/flopped with the address count. |
 | `CAMPAIGNS.md` | Campaign menu: news-story template + 16 pain-point campaigns seeded by the live articles. |
 | `RUNBOOK.md` | How a scheduled Muse run works in v2, step by step, with the exact lead record and the no-outreach rule. |
