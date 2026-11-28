@@ -2,7 +2,7 @@
 
 Pushed to ozone503-maker/saveonbusinessenergy on 2026-11-27 (Jessie's
 order: match the site and push it). The hidden page is live at
-/saveonbusinessenergy.com/leads.html, but the APIs cannot work yet:
+/saveonbusinessenergy.com/leads, but the APIs cannot work yet:
 Postgres is not provisioned and schema.sql has not been run — every
 API call fails until that is done. No cron, nothing sent.
 Live public pages and `api/tex-lead.js` / `api/tex-session.js` are untouched.
