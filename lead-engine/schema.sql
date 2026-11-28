@@ -93,17 +93,35 @@ CREATE TABLE IF NOT EXISTS uploads (
   contributor_name TEXT NOT NULL,   -- denormalised copy, so the label survives even if the contributor row changes
   filename        TEXT NOT NULL,
   source_label    TEXT NOT NULL DEFAULT 'referral upload',
+  file_type       TEXT NOT NULL DEFAULT 'file', -- 'file' (csv/xlsx, imported on the spot) or 'photo' (queued, read on the next run)
   rows_total      INTEGER NOT NULL DEFAULT 0,
   rows_imported   INTEGER NOT NULL DEFAULT 0,
   rows_duplicate  INTEGER NOT NULL DEFAULT 0,
   rows_flagged    INTEGER NOT NULL DEFAULT 0,
   status          TEXT NOT NULL DEFAULT 'done'
-    CHECK (status IN ('done', 'partial', 'failed')),
+    CHECK (status IN ('done', 'partial', 'failed', 'queued')),
   received_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
   received_by     TEXT NOT NULL CHECK (char_length(btrim(received_by)) > 0), -- v3: Jessie, Gavin, or a bot name (audit only)
 );
 
 CREATE INDEX IF NOT EXISTS uploads_contributor_idx ON uploads (contributor_id);
+
+-- v6: upload_files — the image itself for a photo upload. A photo of a
+-- list can't be read by code on this stack, so the next scheduled Muse
+-- run reads it (GET /api/ingest-photo?upload_id=N) and imports the
+-- rows through /api/ingest. The run clears data_base64 after import;
+-- the uploads record stays for audit. Cap: 3 MB per photo (see
+-- api/ingest-photo.js) — Vercel serverless bodies reject bigger ones.
+CREATE TABLE IF NOT EXISTS upload_files (
+  id          SERIAL PRIMARY KEY,
+  upload_id   INTEGER NOT NULL REFERENCES uploads (id),
+  filename    TEXT NOT NULL,
+  mime        TEXT NOT NULL DEFAULT 'image/jpeg',
+  data_base64 TEXT NOT NULL, -- raw base64, no data-URL prefix
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS upload_files_upload_idx ON upload_files (upload_id);
 
 -- v2 columns on leads: where the lead came from when it arrived via upload.
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS contributor_id INTEGER REFERENCES contributors (id);
