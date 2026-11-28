@@ -1,10 +1,12 @@
-// POST / GET /api/ingest — eat entire mailing lists (DRAFT v2 — not live).
-// Same CommonJS style as api/tex-lead.js. No framework. Auth required.
+// POST / GET /api/ingest — eat entire mailing lists (v6 — live).
+// Same CommonJS style as api/tex-lead.js. No framework.
 //
-// The browser (leads.html) parses the uploaded CSV in the browser and
-// POSTs JSON rows — the server never parses multipart uploads, and .xlsx
-// files must be exported to CSV first (see the Upload section on the
-// dashboard; that limit is documented, not hidden).
+// The browser (leads.html) parses the uploaded file in the browser and
+// POSTs JSON rows — the server never parses multipart uploads. Any
+// shape: CSV, or a spreadsheet (.xlsx/.xls, parsed in the browser with
+// the vendored SheetJS reader — no "export to CSV first"). A photo of
+// a list goes to /api/ingest-photo.js instead: it is queued and read
+// on the next run, because there is no OCR service on this stack.
 //
 // POST { contributor_name, contributor_kind?, filename?, rows: [...] }
 //   contributor_name is REQUIRED and is the label on every row — e.g.
