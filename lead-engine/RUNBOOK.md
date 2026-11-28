@@ -27,9 +27,13 @@ Do not lock a cron until Jessie picks the cadence and batch size.
 
 ### 0. Preconditions (fail the run loudly if any is missing)
 
-- Postgres is live and the nine tables exist (`schema.sql` applied).
-- The Muse schedule (cron) can reach the database — connection string
-  from the same Vercel env vars, server-side only.
+- Postgres is live and the tables exist (`schema.sql` + migrations applied).
+- The run's write path is live: `POST /api/write-lead` answers (see
+  step 7). Muse does NOT reach the database directly — it cannot: the
+  connection string lives in Vercel env vars only, and there is no
+  Neon CLI/MCP access from Muse. The run hunts with the browser and
+  writes through the API. (The old "Muse reaches the DB directly" line
+  was wrong for this setup and was corrected 2026-11-27.)
 - No run is already in progress.
 
 ### 0. Read the current agents first — they live in the database
@@ -190,7 +194,16 @@ old one into a duplicate. A skip is not a failure — note it in the report
 if a route keeps surfacing the same businesses (that is a signal the
 route is exhausted).
 
-### 7. Write the leads + contacts
+### 7. Write the leads + contacts — through `POST /api/write-lead`
+
+The run writes hunted leads through `api/write-lead.js` (author:
+'Muse'), in batches of up to 200. The endpoint validates every row
+(business, city, real source URL, route in
+ercot-queue/tx-permits/maps-comptroller; Austin/San Antonio rejected),
+dedupes on email and business+city, inserts the lead + contact, and
+refreshes today's `daily_counts` row from the real tables. It is the
+ONLY write path for hunted leads — never use `/api/ingest` for a hunt
+(it labels everything 'referral upload' / 'referral-partners').
 
 Exact lead record — every field sourced, or left empty:
 
