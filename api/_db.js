@@ -131,6 +131,7 @@ function publicUpload(row) {
     contributor_name: row.contributor_name,
     filename: row.filename,
     source_label: row.source_label,
+    file_type: row.file_type || 'file',
     rows_total: row.rows_total,
     rows_imported: row.rows_imported,
     rows_duplicate: row.rows_duplicate,
