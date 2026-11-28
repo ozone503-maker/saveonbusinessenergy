@@ -57,13 +57,21 @@ It is audit-only, not verified. The old Jessie/Gavin-only CHECK is gone.
 | `contact_email` | The contributor's own email, if known (not a lead). |
 | `notes` | Anything Jessie wants remembered about them. |
 
-### `uploads` — one row per file Jessie uploads (v2)
+### `uploads` — one row per file Jessie uploads (v2; v6 adds `file_type` + `queued`)
 
 `contributor_id`, `contributor_name` (denormalised copy), `filename`,
-`source_label` ('referral upload'), `rows_total`, `rows_imported`,
-`rows_duplicate`, `rows_flagged`, `status` (done / partial / failed),
+`source_label` ('referral upload' or 'photo of a list'), `file_type`
+('file' = csv/xlsx, imported on the spot; 'photo' = queued, read on
+the next run), `rows_total`, `rows_imported`, `rows_duplicate`,
+`rows_flagged`, `status` (done / partial / failed / queued),
 `received_at`, `received_by` (Jessie / Gavin). The ingest report lives
 here, so a bad upload can be audited.
+
+### `upload_files` — the photo itself, for a photo upload (v6)
+
+`upload_id`, `filename`, `mime`, `data_base64` (raw base64, max 3 MB
+photo). The next run reads it via `GET /api/ingest-photo?upload_id=N`
+and clears `data_base64` after import; the `uploads` record stays.
 
 ### `contacts` — the giant email repository (v2)
 
