@@ -47,11 +47,21 @@ approves it *and* confirms the send. That rule binds every role below.
 - Deregulated Texas only: Houston, Dallas–Fort Worth, Corpus Christi.
   Austin and San Antonio are out.
 
-## Ingestor — eats uploaded lists
+## Ingestor — eats uploaded lists, in whatever shape they're in
 
-- Takes a file Jessie uploads (CSV — .xlsx must be exported to CSV
-  first, see `api/ingest.js`), plus the contributor name Jessie gives
-  ("Jose the electrician", a chamber, a CPA…).
+- Takes a file Jessie uploads — CSV, spreadsheet (.xlsx/.xls, read
+  right in the browser with the vendored SheetJS reader, first sheet,
+  first row = headers), or a photo of a list (JPG/PNG, up to 3 MB) —
+  plus the contributor name Jessie gives ("Jose the electrician", a
+  chamber, a CPA…). Front end accepts everything — Grok lists
+  included, any list from anyone. Backend stays Jessie + Muse only.
+- A photo can't be read by code on this stack (no OCR service, no new
+  paid service), so it is QUEUED: `api/ingest-photo.js` stores it
+  (`uploads` status `queued`, file_type `photo`, image in
+  `upload_files`) and the next scheduled run reads it and imports the
+  rows through `/api/ingest` under the same contributor label and the
+  same rules. The page says so plainly. The run clears the image data
+  after import; the record stays for audit.
 - Maps columns (name, business, email, phone, city), dedupes against
   `contacts` (email) and `leads` (business + city), aggregates the new
   rows into the repository, and labels every row with the contributor
