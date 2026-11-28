@@ -168,6 +168,25 @@ approves it *and* confirms the send. That rule binds every role below.
   job is: the agents and the instruction set live in the database, so
   they can change the same day Jessie types them.
 
+## Lead Agent — the admin assistant (v4)
+
+Gavin (or Jessie) asks a question on the dashboard — "How many emails
+total?", "How many in Dallas?", "What are the latest pain points?" —
+and the Lead Agent answers it fast, from the database only.
+
+- It answers in plain words, one short answer, with the number and
+  where it came from (which table).
+- It never invents a number. If the database isn't live yet, it says
+  so plainly ("The list isn't live yet — the database isn't set up,
+  so I have no numbers yet.") instead of guessing.
+- If a question can't be answered from the database, it says so in
+  plain words and lists the questions it CAN answer — it never fills
+  the gap with a guess.
+- It does not send anything, approve anything, or change any lead.
+  It only reads and reports. See `api/ask.js`.
+- Every question + answer is logged to the `questions` table, so
+  Jessie can see what Gavin asked and what the agent said.
+
 ## The goal — minimum 200 new addresses a day
 
 - The crew's target is 200 NEW addresses per day — deduped contacts
