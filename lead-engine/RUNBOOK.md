@@ -273,6 +273,20 @@ bad emails, or Austin / San Antonio rows (those were never imported).
 - Campaigns drafted (if any) and blasts built (draft only — never sent).
 - Nothing else. No outreach happened — say so plainly if it matters.
 
+## Ask the lead agent — questions from Jessie / Gavin
+
+Gavin (or Jessie) types a question in the "Ask the lead agent" box on
+the dashboard and gets a fast answer from the real numbers — the Lead
+Agent (`api/ask.js`, role in `CREW.md`). It answers from the database
+only: total emails, emails/leads in any city, leads total, today vs
+200, latest pain points, latest leads, unsubscribed count, who gave
+us lists. Anything it can't answer gets a plain "I don't have that
+from the list yet" plus what it CAN answer. It never invents a number,
+never sends or approves anything — it only reads and reports. Every
+question + answer is logged to the `questions` table. Until Postgres
+is provisioned, Ask answers "The list isn't live yet — the database
+isn't set up, so I have no numbers yet." That is by design.
+
 ## The no-outreach rule (absolute)
 
 The agent finds and lists ONLY. No emails, calls, or DMs to prospects
