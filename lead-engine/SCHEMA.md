@@ -1,11 +1,12 @@
 # SOBE Lead Engine — schema v3 (draft)
 
-Postgres (Vercel Postgres / Neon). Twelve tables, empty by design — this
+Postgres (Vercel Postgres / Neon). Thirteen tables, empty by design — this
 schema creates no leads, no contacts, nothing invented.
 
 v1 tables: `leads`, `memory`, `directions`.
 v2 tables: `contributors`, `uploads`, `contacts`, `campaigns`, `blasts`.
 v3 tables: `agents`, `agent_versions`, `route_ideas`, `daily_counts`.
+v4 tables: `questions` (Lead Agent's log).
 RETIRED in v3: `login_codes`, `login_sessions` — auth was removed
 2026-11-27 (Jessie: no security need). They are never read or written
 by any v3 endpoint; the CREATE TABLEs are kept in schema.sql only so a
@@ -126,6 +127,14 @@ by_contributor (JSONB breakdowns), target (200, every day). The
 Orchestrator refreshes today's row at the end of each run; the dashboard
 (`api/goal.js`) also computes live from contacts/leads so it is never stale.
 
+### `questions` — Lead Agent's log (v4)
+
+`question`, `answer`, `author` (Jessie / Gavin), `asked_at`. Every
+question asked through the "Ask the lead agent" box on the dashboard,
+and the exact answer it gave — the audit trail for what the Lead Agent
+said. The log insert is best effort: if it fails, the answer still
+goes out.
+
 ### `login_codes` + `login_sessions` — RETIRED in v3 (was password-free login, v2)
 
 Password-free access (Jessie's order). There is no password anywhere.
@@ -148,7 +157,7 @@ Password-free access (Jessie's order). There is no password anywhere.
    `package.json` today, so this is a real step, not a given.
 3. Run once: `psql "$DATABASE_URL" -f lead-engine/schema.sql`
    (or paste `schema.sql` into the database's SQL editor).
-4. Verify: the tables exist and are empty (v3: twelve live tables +
+4. Verify: the tables exist and are empty (v4: thirteen live tables +
    the two retired login tables if you kept them). Do not seed leads or
    contacts.
 
