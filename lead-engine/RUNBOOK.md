@@ -107,13 +107,26 @@ Pay attention to:
 ### 3. Process the ingest queue — lists Jessie uploaded
 
 Before hunting, check for uploads the Ingestor has not yet fully
-processed (in v2 the dashboard upload imports synchronously via
-`api/ingest.js`, so this step is usually a check, not a job — but a
-failed / partial upload is re-checked here):
+processed. CSV/xlsx uploads import synchronously via `api/ingest.js`,
+so this step is usually a check — but a failed / partial upload is
+re-checked here, and a PHOTO upload is always a job for this step:
 
 ```sql
-SELECT * FROM uploads WHERE status IN ('partial', 'failed') ORDER BY received_at DESC;
+SELECT * FROM uploads WHERE status IN ('partial', 'failed', 'queued') ORDER BY received_at DESC;
 ```
+
+For each QUEUED photo upload: fetch the image with
+`GET /api/ingest-photo?upload_id=<id>` (full base64 in the response),
+read the rows off it (business, person, email, phone, city — whatever
+is legible on the list), and import them with `POST /api/ingest`
+using the upload's own `contributor_name` — same rules as any upload
+(dedupe, flag bad / out-of-territory rows, never invent a field).
+Then update the uploads row with the imported / duplicate / flagged
+counts and status `done` / `partial`, and clear the image data
+(`DELETE FROM upload_files WHERE upload_id = <id>` — the uploads
+record stays for audit). If a photo is unreadable, mark it `failed`
+with a note saying why, and tell Jessie in the run report so he can
+re-take it — never guess at rows you can't read.
 
 For each one, report the flagged rows to Jessie and ask whether to fix
 or drop them. Flagged rows are never silently fixed or silently
