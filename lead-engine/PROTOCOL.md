@@ -325,10 +325,9 @@ Open: Enricher accounts — Apollo signup created but login loops back
 to the sign-in screen on every browser; support email sent
 2026-11-27 to support@apollo.io, awaiting reply; LinkedIn
 (manual/backup) not started. 2 fake test contacts still in the list
-(Jessie hasn't answered the offer to clear them). No memory-write
-endpoint yet (runs can't record `route:*` lessons or
-`do-not-repeat:*` rows — `api/memory.js` is GET-only). Route Scout
-not run yet. No scheduled runs yet — cadence is Jessie's pick
+(Jessie hasn't answered the offer to clear them). Memory-write endpoint
+live (`POST /api/memory`, verified with the first hunt's route lessons).
+Route Scout not run yet. No scheduled runs yet — cadence is Jessie's pick
 (weekday mornings is the draft proposal; weekly megablast day TBD).
 No real .xlsx and no real photo has gone through the live page yet.
 Neon agent integration not installed — the setup page failed a
