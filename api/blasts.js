@@ -81,7 +81,7 @@ function unsubscribeFooter(email) {
     'business was listed as a Texas commercial energy contact. ' +
     '<a href="' +
     base +
-    '/leads.html?unsubscribe=' +
+    '/leads?unsubscribe=' +
     encodeURIComponent(email) +
     '">Unsubscribe</a> — one click, no questions, and we will not email you again.</p>'
   );
