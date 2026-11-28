@@ -36,8 +36,8 @@ hosts the hidden dashboard and the Postgres database. Jessie + Muse only.
    v2 is REMOVED, on Jessie's explicit call: nobody else will ever know
    the hidden page's address, so there is no security need. The page
    opens straight to the dashboard. Anyone using the machine can push
-   — Jessie, Gavin, or another bot. Every push carries an `author`
-   field (Jessie / Gavin / bot name) for audit logging only; it is not
+   — Jessie + Muse (Gavin joins later). Every push carries an `author`
+   field (Jessie / Muse) for audit logging only; it is not
    verified. See `api/_auth.js` (open-access note) and `api/leads-auth.js`
    (retired stub, answers 410). The `login_codes` / `login_sessions`
    tables are retired — never read or written.
@@ -55,24 +55,50 @@ hosts the hidden dashboard and the Postgres database. Jessie + Muse only.
 5. **Action buttons.** One bar at the top of the dashboard with big
    phone-friendly buttons, each doing one named thing (below).
 
-## Action buttons (dashboard, top of the page)
+## What changed in v4 — simplified (Jessie's ruling, 2026-11-27)
 
-| Button | What it does |
-|---|---|
-| Send email | Scrolls to the Weekly megablast, shows the blast builder. It never sends on first tap — build the blast first (recipient count + preview), then approve, then confirm to send. |
-| Craft campaign | Scrolls to the Campaigns builder (news-story or pain-point). |
-| Import new list | Scrolls to Upload a mailing list (contributor name + CSV). |
-| Sort by keyword | Scrolls to Leads and focuses the keyword search — search / sort leads and contacts by keyword, tag, route, city, contributor, status. |
-| Find new leads | Saves a direction for the next run: run Hunter + Route Scout. The run reports back what it found. |
-| Reprogram agent | Scrolls to the Reprogram box (paste a large instruction chunk, pick the agent, see version history). |
-| Today vs 200 | Scrolls to the Goal Tracker and refreshes today's count vs 200. |
+The dashboard as built was not user friendly. Simplified: phone-first,
+plain words, fewest taps, no jargon on the page.
+
+First view is three things only, in order:
+1. **How to use this** — 3 short lines right under the title.
+2. **Today** — one big number: "X of 200 new emails today". Nothing else
+   about the goal on first view.
+3. **Add leads** (one big button — opens "Upload a list" and "Find new
+   leads" underneath) and **Send email** (one big button — preview first,
+   then approve, then confirm, same gate as before).
+Then the leads list, as cards only: business, person, Approve / Skip.
+No tables, no filters row on first view.
+
+Everything else lives behind one closed **More** section at the bottom,
+with one dropdown per job, each labelled in plain words:
+
+**Out in the open (everyday):** finding leads, adding a list, sending
+email — Add leads, Send email, Approve / Skip on each lead card.
+**In dropdowns, closed by default (rarely needed):**
+- Send an email to the list — the weekly email builder + preview + approve
+  (the Sender's work; the send gate is unchanged).
+- Write a new email — the Email Writer's builder (news story / sore spot).
+- Tell the agent what to do — directions for the next run.
+- Change how the agent works — the Fixer: paste a big chunk of words,
+  rebuild a worker in the website, version history kept.
+- Find new ways to get leads — the Scout's idea log.
+- What the agent has learned — memory + today's detail (still to go,
+  where they came from, this week).
+- Find a lead by word — search + sort. The person-finder has no buttons:
+  it works on its own during a run.
+
+Visible page copy is plain words only — no dedupe, contributor, Postgres,
+API, audience, ingest, enrich, orchestrator, or reprogram jargon, and no
+"another bot" wording. The page says Jessie + Muse, Gavin joins later.
+Underlying API field names are unchanged, so nothing breaks.
 
 ## Files
 
 | File | What it is |
 |---|---|
 | `SCHEMA.md` + `schema.sql` | Postgres: v1 `leads`, `memory`, `directions` + v2 `contributors`, `uploads`, `contacts`, `campaigns`, `blasts` + v3 `agents`, `agent_versions`, `route_ideas`, `daily_counts`. `login_codes` / `login_sessions` RETIRED in v3. Run `schema.sql` once, after provisioning. |
-| `leads.html` | Hidden dashboard (unlisted, `noindex`, no public links). NO LOGIN — opens straight to the dashboard (v3). Action bar, Goal Tracker (today vs 200), lead table with approve/reject + keyword search/sort, Upload a mailing list, "Tell the agent" directions, Reprogram box + version history, Route Scout log, Memory, Campaigns, Weekly megablast. |
+| `leads.html` | Hidden dashboard (unlisted, `noindex`, no public links). NO LOGIN — opens straight to the dashboard. v4 simplified: How-to note, Today number, Add leads + Send email big buttons, lead cards with Approve / Skip, everything else behind one closed More section with one plain-words dropdown per job. |
 | `api/_db.js` | Shared Postgres pool (`pg`, not installed yet) + public-row presenters for leads, contacts, campaigns, blasts, uploads. |
 | `api/_auth.js` | v3: NO AUTH. Open-access note + audit-only author helper. No login check, no session, no code. |
 | `api/leads-auth.js` | RETIRED in v3 — answers 410 Gone. Do not revive without Jessie's order. |
@@ -93,10 +119,10 @@ hosts the hidden dashboard and the Postgres database. Jessie + Muse only.
 Muse hunts Texas businesses with serious power bills (routes 1–3 first:
 ERCOT queue, TX permits, Maps + Comptroller), writes sourced leads to
 Postgres, and remembers what worked, what flopped, and which leads not
-to repeat. Jessie and Gavin steer it from the hidden dashboard by leaving
+to repeat. Jessie steers it from the hidden dashboard by leaving
 directions — including reprogram directions, which the Maintenance Bot
 turns into rules in the database so the next run behaves differently
-with no deploy. Uploaded mailing lists join the same repository, labelled
+with no deploy. Gavin joins later. Uploaded mailing lists join the same repository, labelled
 by who gave them, and the Campaign Writer + Blast Manager turn the
 repository into weekly megablasts — drafts until Jessie approves and
 confirms each one. No outreach without Jessie's explicit go.
