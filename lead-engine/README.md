@@ -188,7 +188,7 @@ runs the backend or the agents.
 | `api/leads-auth.js` | RETIRED in v3 — answers 410 Gone. Do not revive without Jessie's order. |
 | `api/leads.js` | GET list (filter by status/route/city), POST approve/reject. No browser lead creation, no `contacted` from here. |
 | `api/directions.js` | GET directions, POST a new one (Jessie / Gavin / bot name, audit only). |
-| `api/memory.js` | GET memory. Read-only from the browser; the run writes it. |
+| `api/memory.js` | GET memory + POST upsert — the run's write path for route lessons, rules, and do-not-repeat rows. |
 | `api/ingest.js` | POST a contributor + JSON rows (browser parses the file — CSV, or a spreadsheet read with the vendored SheetJS reader). Dedupe on email + business+city, label with contributor, flag bad / out-of-territory rows for review. GET lists uploads + contributors. |
 | `api/ingest-photo.js` | POST a photo of a list (JPG/PNG, up to 3 MB) + contributor — queues it (status `queued`, file_type `photo`, image in `upload_files`) for the next run to read and import. GET lists queued photos; GET ?upload_id=N returns the full image for the run. |
 | `vendor/xlsx.full.min.js` | Vendored SheetJS 0.20.3 reader, served from the site — the browser reads .xlsx/.xls with no new server dependency and no CDN. |
