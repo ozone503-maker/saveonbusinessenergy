@@ -3,16 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- HIDDEN PAGE — live v3. No login. Do not link from index.html, nav, sitemap, or any public page. The URL itself is the only protection, per Jessie 2026-11-27. -->
+<!-- HIDDEN PAGE — simple version. No login. Do not link from index.html, nav, sitemap, or any public page. Jessie + Muse only, Gavin joins later. -->
 <meta name="robots" content="noindex, nofollow">
 <title>Lead Engine — Save on Business Energy</title>
 <link rel="stylesheet" href="styles.css">
 <style>
   /* Light theme — matches saveonbusinessenergy.com (styles.css).
      Site variables come from the linked styles.css; this block only
-     styles dashboard-only components in the same language:
-     white cards, #E0E7FF borders, navy text, muted sub text,
-     gradient primary buttons (same as .cta-button). */
+     styles dashboard-only parts in the same language. */
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -30,10 +28,11 @@
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
   h2 {
-    font-size: 1.3rem; font-weight: 800; margin: 1.6rem 0 0.5rem;
+    font-size: 1.3rem; font-weight: 800; margin: 1.4rem 0 0.5rem;
     background: linear-gradient(90deg, var(--cyan), var(--purple));
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
+  p.how { color: var(--text-muted); font-size: 0.85rem; line-height: 1.55; margin-bottom: 0.8rem; }
   p.sub { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; }
   .card {
     background: var(--surface); border: 1px solid var(--border);
@@ -42,6 +41,13 @@
   .card h3 { font-size: 0.95rem; margin-bottom: 0.15rem; color: var(--navy); }
   .card .meta { font-size: 0.8rem; color: var(--text-muted); word-wrap: break-word; }
   .card .meta a { color: #4338CA; word-break: break-all; }
+  .today-card { text-align: center; padding: 1.2rem 0.8rem; }
+  .big-number {
+    font-size: 2rem; font-weight: 800; line-height: 1.2;
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .today-card .sub { margin-bottom: 0; }
   .pill {
     display: inline-block; font-size: 0.7rem; font-weight: 700;
     padding: 0.15rem 0.5rem; border-radius: 999px; margin: 0.3rem 0.3rem 0 0;
@@ -62,12 +68,18 @@
     padding: 0.6rem 1rem; border-radius: 8px; border: none; cursor: pointer;
     min-height: 44px;
   }
+  .big-btn {
+    display: block; width: 100%;
+    font-size: 1.15rem; font-weight: 800;
+    padding: 1rem; border-radius: 10px; min-height: 60px;
+    margin-bottom: 0.6rem;
+  }
   .btn-primary {
     background: linear-gradient(90deg, var(--cyan), var(--purple)); color: #fff;
     box-shadow: 0 4px 20px rgba(0, 212, 255, 0.4);
   }
   .btn-approve { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
-  .btn-reject { background: #fff; color: #B91C1C; border: 1px solid #FECACA; }
+  .btn-skip { background: #fff; color: var(--text-muted); border: 1px solid var(--border); }
   .btn-ghost { background: #fff; color: var(--navy); border: 1px solid var(--border); }
   input, select, textarea {
     font-family: inherit; font-size: 16px; width: 100%;
@@ -80,16 +92,18 @@
   .empty { color: var(--text-muted); font-size: 0.85rem; }
   .error { color: #B91C1C; font-size: 0.85rem; margin-top: 0.4rem; }
   .ok { color: #065F46; font-size: 0.85rem; margin-top: 0.4rem; }
-  .filters { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
-  .filters select { width: auto; flex: 1; min-width: 110px; margin-bottom: 0; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; display: none; background: #fff; border: 1px solid var(--border); border-radius: 8px; }
-  th, td { text-align: left; padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
-  th { color: var(--navy); font-size: 0.75rem; background: #F0F9FF; white-space: nowrap; }
-  td a { color: #4338CA; word-break: break-all; }
-  @media (min-width: 700px) {
-    .lead-cards { display: none; }
-    table.leads-table { display: table; }
+  details {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; margin-bottom: 0.6rem; padding: 0.2rem 0.8rem;
   }
+  details > summary {
+    font-size: 1rem; font-weight: 800; color: var(--navy);
+    padding: 0.8rem 0; cursor: pointer; min-height: 48px;
+    display: flex; align-items: center;
+  }
+  details > summary::-webkit-details-marker { margin-right: 0.4rem; }
+  details details { margin-bottom: 0.6rem; }
+  details > summary + * { padding-bottom: 0.8rem; }
   footer { margin-top: 2rem; font-size: 0.7rem; color: var(--text-muted); text-align: center; }
   [hidden] { display: none !important; }
 </style>
@@ -97,210 +111,215 @@
 <body>
 <main>
   <h1>Lead Engine</h1>
-  <p class="sub">Save on Business Energy — hidden dashboard. Finds and lists only.
-  No outreach goes out from here without Jessie's explicit go.</p>
+  <p class="how">Check how many new emails came in today.<br>
+  Tap Add leads to feed it a list or find new ones, and approve the leads you like.<br>
+  Tap Send email to check the preview, then send.</p>
+  <p class="sub">Jessie + Muse. Gavin joins later. Nothing here sends without your say-so.</p>
 
   <div id="app">
-    <p class="sub">No login on this page — anyone with the address can use it (Jessie, Gavin, or another bot). Pushes are labelled with who made them, for the record only.</p>
     <p class="ok" id="page-note" hidden></p>
 
-    <!-- Action bar (v3). One bar, big tap targets, each button does one named thing. -->
-    <div class="row" id="action-bar" role="group" aria-label="Actions">
-      <button class="btn-primary" id="btn-send-email" type="button">Send email</button>
-      <button class="btn-primary" id="btn-craft-campaign" type="button">Craft campaign</button>
-      <button class="btn-primary" id="btn-import-list" type="button">Import new list</button>
-      <button class="btn-ghost" id="btn-sort-keyword" type="button">Sort by keyword</button>
-      <button class="btn-ghost" id="btn-find-leads" type="button">Find new leads</button>
-      <button class="btn-ghost" id="btn-reprogram" type="button">Reprogram agent</button>
-      <button class="btn-ghost" id="btn-goal" type="button">Today vs 200</button>
+    <div class="card today-card">
+      <div class="big-number" id="goal-today">Today: — of 200 new emails</div>
+      <p class="sub">How many new emails today?</p>
     </div>
-    <p class="sub" id="action-note">Send email never sends on the first tap — it shows the blast preview first. Find new leads queues Hunter + Scout for the next run.</p>
-    <div class="row"><span class="meta" id="counts" style="align-self:center;font-size:0.8rem;color:var(--muted)"></span></div>
 
-    <h2 id="goal-heading">Today vs 200</h2>
-    <div class="card" id="goal-card">
-      <h3 id="goal-today">Today: — new addresses of 200</h3>
-      <p class="meta" id="goal-shortfall"></p>
-      <p class="meta" id="goal-breakdown"></p>
-      <p class="meta" id="goal-week"></p>
-      <p class="sub">Counted, never guessed: deduped contacts with a real email, added today. Hunting + uploads + Scout finds together — not Hunter alone.</p>
+    <button class="big-btn btn-primary" id="btn-add-leads" type="button">Add leads</button>
+    <div id="add-panel" hidden>
+      <button class="big-btn btn-ghost" id="btn-import-list" type="button">Upload a list</button>
+      <button class="big-btn btn-ghost" id="btn-find-leads" type="button">Find new leads</button>
+      <p class="sub" id="action-note">Pick one — upload a list someone gave us, or find new ones.</p>
+      <div id="upload-card" hidden>
+        <div class="card">
+          <p class="sub">Got a list from someone — Jose the electrician, a chamber, a CPA?
+          Pick the file below. We check it against the list we already have,
+          so the same email never goes in twice, and we mark every row with
+          who gave it to us. If the file is a spreadsheet, save it as a CSV
+          first. A row with no business and no email, a bad email, or an
+          Austin / San Antonio address comes back for you to check — we
+          never guess, and we never quietly drop it.</p>
+          <label for="contributor-name">Who gave us this list?</label>
+          <input type="text" id="contributor-name" placeholder="e.g. Jose the electrician">
+          <label for="upload-file">CSV file</label>
+          <input type="file" id="upload-file" accept=".csv,text/csv">
+          <div id="mapping" hidden>
+            <p class="sub">Match each column to a field. The guesses below come from the
+            column names — fix any that are wrong.</p>
+            <div id="mapping-rows"></div>
+            <p class="meta" id="upload-preview" style="font-size:0.8rem;color:var(--text-muted)"></p>
+            <button class="btn-primary" id="upload-btn" type="button">Import this list</button>
+          </div>
+          <p class="ok" id="upload-ok" hidden></p>
+          <p class="error" id="upload-error" hidden></p>
+          <div id="upload-flagged"></div>
+        </div>
+        <div id="upload-history"></div>
+      </div>
     </div>
+
+    <button class="big-btn btn-primary" id="btn-send-email" type="button">Send email</button>
+    <p class="sub" id="send-note">Send email shows the preview first. Nothing sends on the first tap.</p>
 
     <h2>Leads</h2>
-    <div class="filters">
-      <input type="search" id="keyword" placeholder="Sort by keyword — try a word, tag, city, route, contributor…" aria-label="Sort by keyword" style="flex:2;min-width:200px;margin-bottom:0">
-      <select id="sort-by" aria-label="Sort leads">
-        <option value="newest">Newest first</option>
-        <option value="business">Business A–Z</option>
-        <option value="city">City A–Z</option>
-        <option value="route">Route A–Z</option>
-      </select>
-      <select id="filter-status" aria-label="Filter by status">
-        <option value="">All statuses</option>
-        <option value="new">New</option>
-        <option value="approved">Approved</option>
-        <option value="rejected">Rejected</option>
-        <option value="contacted">Contacted</option>
-      </select>
-      <select id="filter-route" aria-label="Filter by route">
-        <option value="">All routes</option>
-        <option value="ercot-queue">ERCOT queue</option>
-        <option value="tx-permits">TX permits</option>
-        <option value="maps-comptroller">Maps + Comptroller</option>
-        <option value="apollo-linkedin">Apollo + LinkedIn</option>
-        <option value="associations-chambers">Associations + chambers</option>
-        <option value="referral-partners">Referral partners</option>
-      </select>
-    </div>
-    <p class="empty" id="leads-empty">No leads yet — the first run hasn't written any.</p>
-    <div class="lead-cards" id="lead-cards"></div>
-    <table class="leads-table" id="leads-table">
-      <thead><tr><th>Business</th><th>Decision-maker</th><th>Contact</th><th>Source</th><th>Why now</th><th></th></tr></thead>
-      <tbody id="leads-body"></tbody>
-    </table>
+    <p class="empty" id="leads-empty">No leads yet — check back after the next run.</p>
+    <div id="lead-cards"></div>
+    <p class="meta" id="counts" style="font-size:0.8rem;color:var(--text-muted)"></p>
 
-    <h2>Upload a mailing list</h2>
-    <div class="card">
-      <p class="sub">Got a list from someone — Jose the electrician, a chamber, a CPA?
-      Upload the CSV here and the agent eats the whole thing: dedupes it
-      against what we already have, aggregates it into the repository,
-      and labels every row with who gave it to us. .xlsx files: export to
-      CSV first. Nothing is invented — a row with no business and no email,
-      a bad email, or an Austin / San Antonio address comes back flagged
-      for you to review, not silently imported.</p>
-      <label for="contributor-name">Who gave us this list?</label>
-      <input type="text" id="contributor-name" placeholder="e.g. Jose the electrician">
-      <label for="upload-file">CSV file</label>
-      <input type="file" id="upload-file" accept=".csv,text/csv">
-      <div id="mapping" hidden>
-        <p class="sub">Match each column to a field. The guesses below come from the
-        column names — fix any that are wrong.</p>
-        <div id="mapping-rows"></div>
-        <p class="meta" id="upload-preview" style="font-size:0.8rem;color:var(--muted)"></p>
-        <button class="btn-primary" id="upload-btn" type="button">Import this list</button>
-      </div>
-      <p class="ok" id="upload-ok" hidden></p>
-      <p class="error" id="upload-error" hidden></p>
-      <div id="upload-flagged"></div>
-    </div>
-    <div id="upload-history"></div>
+    <details id="more">
+      <summary>More</summary>
+      <p class="sub">The rest lives here. Tap one to open it. Finding the person who
+      pays the bill happens on its own during a run — nothing to tap for that.</p>
 
-    <h2>Tell the agent</h2>
-    <div class="card">
-      <p class="sub">Directions are read first on the next scheduled run. The agent
-      marks each one done with a note — or declined, with the reason, if it
-      conflicts with the brief (for example, asking for outreach). A
-      reprogram direction ("stop doing X, start doing Y") is picked up by
-      the Maintenance Bot and takes effect on the next run, with no code
-      deploy — see the result note it writes back.</p>
-      <label for="author">From</label>
-      <select id="author">
-        <option>Jessie</option>
-        <option>Gavin</option>
-      </select>
-      <label for="direction-text">Direction</label>
-      <textarea id="direction-text" placeholder="e.g. Focus on cold storage in Houston this week"></textarea>
-      <button class="btn-primary" id="direction-btn" type="button">Send direction</button>
-      <p class="ok" id="direction-ok" hidden>Saved — the agent will read it on its next run.</p>
-      <p class="error" id="direction-error" hidden></p>
-    </div>
-    <div id="pending-directions"></div>
+      <details id="details-send">
+        <summary>Send an email to the list</summary>
+        <p class="sub">Pick an email, check who it goes to — how many, and a few names
+        — then approve it. Approving gets it ready; it still does not send
+        until you say so a second time. People who asked to stop getting
+        email are never on the list.</p>
+        <div class="card">
+          <p class="meta" id="mailable-count" style="font-size:0.85rem;color:var(--text-muted)"></p>
+          <label for="blast-campaign">Email</label>
+          <select id="blast-campaign"></select>
+          <label for="blast-name">Name for this send</label>
+          <input type="text" id="blast-name" placeholder="e.g. Weekly email — week of Dec 7">
+          <label for="blast-cities">Cities (leave blank for all — Houston, Dallas, and the rest)</label>
+          <input type="text" id="blast-cities" placeholder="Houston, Dallas">
+          <button class="btn-primary" id="blast-build-btn" type="button">Check the preview</button>
+          <p class="ok" id="blast-ok" hidden></p>
+          <p class="error" id="blast-error" hidden></p>
+          <div id="blast-preview"></div>
+        </div>
+        <div id="blast-list"></div>
+      </details>
 
-    <h2 id="reprogram-heading">Reprogram agent</h2>
-    <div class="card">
-      <p class="sub">Paste a large chunk of instructions — from you, Gavin, or another bot — and the Maintenance Bot rebuilds that agent inside the website. Up to 50,000 characters. A new version is created every time; history is never overwritten, and the raw paste is kept verbatim. The next run reads the new version — no code deploy. The brief's hard rules still bind it: a chunk that tries to override them (outreach without approval, invented contacts, Austin / San Antonio, "broker" wording, savings promises) is declined in part, and the reply says what was dropped and why.</p>
-      <label for="reprogram-agent">Agent</label>
-      <select id="reprogram-agent">
-        <option>Orchestrator</option><option>Hunter</option><option>Route Scout</option><option>Ingestor</option><option>Enricher</option><option>Campaign Writer</option><option>Blast Manager</option><option>Maintenance Bot</option>
-      </select>
-      <label for="reprogram-new-name">Or a new agent name (leave blank to rebuild the one above)</label>
-      <input type="text" id="reprogram-new-name" placeholder="e.g. Chamber Scout">
-      <label for="reprogram-author">From (audit only — Jessie, Gavin, or a bot name)</label>
-      <input type="text" id="reprogram-author" placeholder="Jessie">
-      <label for="reprogram-source-bot">Which bot did this text come from? (blank if it is yours)</label>
-      <input type="text" id="reprogram-source-bot" placeholder="e.g. Jessie">
-      <label for="reprogram-text">Instructions — paste the whole chunk here</label>
-      <textarea id="reprogram-text" style="min-height:180px" placeholder="Paste the full instructions from the other bot here…"></textarea>
-      <button class="btn-primary" id="reprogram-btn" type="button">Rebuild this agent</button>
-      <p class="ok" id="reprogram-ok" hidden></p>
-      <p class="error" id="reprogram-error" hidden></p>
-    </div>
-    <div id="agent-list"></div>
-    <div id="agent-history"></div>
+      <details id="details-write">
+        <summary>Write a new email</summary>
+        <p class="sub">Emails built around one real news story, or around a sore spot
+        like a contract ending. Every one is a draft. Nothing sends from here.</p>
+        <div class="card">
+          <label for="campaign-name">Email name</label>
+          <input type="text" id="campaign-name" placeholder="e.g. Contract ending — free review">
+          <label for="campaign-type">Kind</label>
+          <select id="campaign-type">
+            <option value="pain-point">Sore spot (from a live article)</option>
+            <option value="news">News story (one real story, with source)</option>
+          </select>
+          <label for="campaign-pain">Sore spot (for sore-spot emails)</label>
+          <input type="text" id="campaign-pain" placeholder="e.g. contract ending">
+          <label for="campaign-news">News story — headline + source (for news emails; never make one up)</label>
+          <input type="text" id="campaign-news" placeholder="Headline, as reported">
+          <label for="campaign-news-url">News source link</label>
+          <input type="text" id="campaign-news-url" placeholder="https://…">
+          <label for="campaign-angle">Angle (1–2 sentences)</label>
+          <textarea id="campaign-angle" placeholder="What this means for a Texas business, and what to check"></textarea>
+          <label for="campaign-subjects">Subject lines (one per line)</label>
+          <textarea id="campaign-subjects" placeholder="Your contract end date is on your bill — here is where"></textarea>
+          <label for="campaign-body">Draft email</label>
+          <textarea id="campaign-body" placeholder="Draft only. No promise of savings, no 'broker' word."></textarea>
+          <button class="btn-primary" id="campaign-btn" type="button">Save email draft</button>
+          <p class="ok" id="campaign-ok" hidden>Saved as a draft.</p>
+          <p class="error" id="campaign-error" hidden></p>
+        </div>
+        <div id="campaign-list"></div>
+      </details>
 
-    <h2 id="scout-heading">Route Scout — new ways to get leads</h2>
-    <p class="sub">The Scout's only job is new angles — a list, a source, a partnership nobody has tried. Even 20–30 new addresses counts, and it adds up toward the 200/day goal.</p>
-    <div class="card">
-      <label for="scout-idea">Propose a new idea</label>
-      <textarea id="scout-idea" placeholder="e.g. Texas restaurant association member list — big kitchens, big bills"></textarea>
-      <label for="scout-source">Where did the idea come from?</label>
-      <input type="text" id="scout-source" placeholder="e.g. Jessie, a news story">
-      <button class="btn-primary" id="scout-btn" type="button">Save idea</button>
-      <p class="ok" id="scout-ok" hidden>Saved — the Orchestrator tries the best idea next run.</p>
-      <p class="error" id="scout-error" hidden></p>
-    </div>
-    <div id="scout-list"></div>
+      <details id="details-tell">
+        <summary>Tell the agent what to do</summary>
+        <p class="sub">What you write here is read first on the next run. We mark each
+        one done and say what happened — or say why not, if it goes against
+        the brief (like asking us to send email without your go).</p>
+        <div class="card">
+          <label for="author">From</label>
+          <select id="author">
+            <option>Jessie</option>
+            <option>Muse</option>
+          </select>
+          <label for="direction-text">What should it do?</label>
+          <textarea id="direction-text" placeholder="e.g. Focus on cold storage in Houston this week"></textarea>
+          <button class="btn-primary" id="direction-btn" type="button">Send direction</button>
+          <p class="ok" id="direction-ok" hidden>Saved — the agent will read it on its next run.</p>
+          <p class="error" id="direction-error" hidden></p>
+        </div>
+        <div id="pending-directions"></div>
+      </details>
 
-    <h2>Memory</h2>
-    <p class="sub">What the agent has learned: routes that worked or flopped,
-    standing rules, and leads not to repeat.</p>
-    <p class="empty" id="memory-empty">No memory yet — it fills in as runs complete.</p>
-    <div id="memory-list"></div>
+      <details id="details-change">
+        <summary>Change how the agent works</summary>
+        <p class="sub">Paste a big chunk of instructions and we rebuild that worker
+        inside the website. Up to 50,000 characters. A new version is made
+        every time — old ones are kept, and the words you pasted are kept
+        word for word. The next run uses the new version. The hard rules
+        still apply: no sending without your go, no made-up contacts,
+        no Austin / San Antonio, no “broker” word, no promise of savings.</p>
+        <div class="card">
+          <label for="reprogram-agent">Worker</label>
+          <select id="reprogram-agent">
+            <option value="Orchestrator">Main worker — runs the whole job</option>
+            <option value="Hunter">Hunter — finds new businesses</option>
+            <option value="Route Scout">Scout — finds new ways to get leads</option>
+            <option value="Ingestor">List eater — takes in uploaded lists</option>
+            <option value="Enricher">Person finder — finds who pays the bill</option>
+            <option value="Campaign Writer">Email writer — writes new emails</option>
+            <option value="Blast Manager">Sender — builds the weekly email</option>
+            <option value="Maintenance Bot">Fixer — rebuilds workers from your words</option>
+          </select>
+          <label for="reprogram-new-name">Or a new worker name (leave blank to rebuild the one above)</label>
+          <input type="text" id="reprogram-new-name" placeholder="e.g. Chamber Scout">
+          <label for="reprogram-author">From</label>
+          <input type="text" id="reprogram-author" placeholder="Jessie">
+          <label for="reprogram-source-bot">Where did these words come from? (leave blank if they're yours)</label>
+          <input type="text" id="reprogram-source-bot" placeholder="e.g. Jessie">
+          <label for="reprogram-text">Instructions — paste the whole chunk here</label>
+          <textarea id="reprogram-text" style="min-height:180px" placeholder="Paste the full instructions here…"></textarea>
+          <button class="btn-primary" id="reprogram-btn" type="button">Rebuild this worker</button>
+          <p class="ok" id="reprogram-ok" hidden></p>
+          <p class="error" id="reprogram-error" hidden></p>
+        </div>
+        <div id="agent-list"></div>
+        <div id="agent-history"></div>
+      </details>
 
-    <h2>Campaigns</h2>
-    <p class="sub">News-story campaigns (built around one real story) and pain-point
-    campaigns (built around a live article — see CAMPAIGNS.md for the full
-    menu). Every campaign is a draft. Nothing sends from here.</p>
-    <div class="card">
-      <label for="campaign-name">Campaign name</label>
-      <input type="text" id="campaign-name" placeholder="e.g. Contract ending — free review">
-      <label for="campaign-type">Type</label>
-      <select id="campaign-type">
-        <option value="pain-point">Pain point (from a live article)</option>
-        <option value="news">News story (one real story, with source)</option>
-      </select>
-      <label for="campaign-pain">Pain point (for pain-point campaigns)</label>
-      <input type="text" id="campaign-pain" placeholder="e.g. contract ending">
-      <label for="campaign-news">News story — headline + source (for news campaigns; never invent one)</label>
-      <input type="text" id="campaign-news" placeholder="Headline, as reported">
-      <label for="campaign-news-url">News source link</label>
-      <input type="text" id="campaign-news-url" placeholder="https://…">
-      <label for="campaign-angle">Angle (1–2 sentences)</label>
-      <textarea id="campaign-angle" placeholder="What this means for a Texas business, and what to check"></textarea>
-      <label for="campaign-subjects">Subject lines (one per line)</label>
-      <textarea id="campaign-subjects" placeholder="Your contract end date is on your bill — here is where"></textarea>
-      <label for="campaign-body">Draft email body</label>
-      <textarea id="campaign-body" placeholder="Draft only. No savings promise, no 'broker' word."></textarea>
-      <button class="btn-primary" id="campaign-btn" type="button">Save campaign draft</button>
-      <p class="ok" id="campaign-ok" hidden>Saved as a draft.</p>
-      <p class="error" id="campaign-error" hidden></p>
-    </div>
-    <div id="campaign-list"></div>
+      <details id="details-scout">
+        <summary>Find new ways to get leads</summary>
+        <p class="sub">New angles only — a list, a source, a partner nobody has tried.
+        Even 20 or 30 new emails counts, and it adds up toward 200 a day.</p>
+        <div class="card">
+          <label for="scout-idea">New idea</label>
+          <textarea id="scout-idea" placeholder="e.g. Texas restaurant association member list — big kitchens, big bills"></textarea>
+          <label for="scout-source">Where did the idea come from?</label>
+          <input type="text" id="scout-source" placeholder="e.g. Jessie, a news story">
+          <button class="btn-primary" id="scout-btn" type="button">Save idea</button>
+          <p class="ok" id="scout-ok" hidden>Saved — the agent tries the best idea next run.</p>
+          <p class="error" id="scout-error" hidden></p>
+        </div>
+        <div id="scout-list"></div>
+      </details>
 
-    <h2>Weekly megablast</h2>
-    <p class="sub">Build the blast from a campaign, check the preview — recipient
-    count, sample addresses, subject, body — then approve it. Approval
-    arms it; it does NOT send it. Sending needs a second confirm, and
-    only an approved blast can be sent. Unsubscribed addresses are
-    excluded from every audience, and every email carries an unsubscribe
-    link.</p>
-    <div class="card">
-      <p class="meta" id="mailable-count" style="font-size:0.85rem;color:var(--muted)"></p>
-      <label for="blast-campaign">Campaign</label>
-      <select id="blast-campaign"></select>
-      <label for="blast-name">Blast name</label>
-      <input type="text" id="blast-name" placeholder="e.g. Weekly megablast — week of Dec 7">
-      <label for="blast-cities">Cities (comma-separated, blank = all deregulated cities)</label>
-      <input type="text" id="blast-cities" placeholder="Houston, Dallas">
-      <button class="btn-primary" id="blast-build-btn" type="button">Build blast (draft + preview)</button>
-      <p class="ok" id="blast-ok" hidden></p>
-      <p class="error" id="blast-error" hidden></p>
-      <div id="blast-preview"></div>
-    </div>
-    <div id="blast-list"></div>
+      <details id="details-learned">
+        <summary>What the agent has learned</summary>
+        <p class="sub">What worked, what didn't, and who not to ask twice.</p>
+        <p class="meta" id="goal-shortfall" style="font-size:0.8rem;color:var(--text-muted)"></p>
+        <p class="meta" id="goal-breakdown" style="font-size:0.8rem;color:var(--text-muted)"></p>
+        <p class="meta" id="goal-week" style="font-size:0.8rem;color:var(--text-muted)"></p>
+        <p class="empty" id="memory-empty">Nothing learned yet — it fills in as runs complete.</p>
+        <div id="memory-list"></div>
+      </details>
+
+      <details id="details-find">
+        <summary>Find a lead by word</summary>
+        <p class="sub">Type a word to search the leads — a business, a city, a person.</p>
+        <input type="search" id="keyword" placeholder="Try a word, a city, a name…" aria-label="Find a lead by word">
+        <select id="sort-by" aria-label="Sort leads">
+          <option value="newest">Newest first</option>
+          <option value="business">Business A–Z</option>
+          <option value="city">City A–Z</option>
+          <option value="route">Route A–Z</option>
+        </select>
+      </details>
+    </details>
   </div>
 
-  <footer>Hidden dashboard — NO LOGIN, open to anyone with the address, per Jessie. No outreach without Jessie's explicit go.</footer>
+  <footer>Hidden page — Jessie + Muse. Gavin joins later. Nothing sends without your say-so.</footer>
 </main>
 
 <script>
@@ -320,31 +339,34 @@
     var bits = [];
     if (l.contact_email) bits.push(esc(l.contact_email));
     if (l.contact_phone) bits.push(esc(l.contact_phone));
-    return bits.length ? bits.join('<br>') : '<em>no contact yet</em>';
+    return bits.length ? bits.join('<br>') : '<em>No contact yet</em>';
   }
   function pill(text, cls) { return '<span class="pill ' + cls + '">' + esc(text) + '</span>'; }
+  function plainStatus(s) {
+    return { 'new': 'New', 'approved': 'Approved', 'rejected': 'Skipped', 'contacted': 'Contacted' }[s] || s;
+  }
+  function plainContact(s) {
+    return s === 'sourced' ? 'Has contact' : 'No contact yet';
+  }
 
   function leadCard(l) {
     return '<div class="card"><h3>' + esc(l.business) + ' — ' + esc(l.city) + '</h3>' +
-      '<p class="meta">' + (l.decision_maker ? esc(l.decision_maker) + (l.title ? ', ' + esc(l.title) : '') : 'Decision-maker unknown') + '</p>' +
+      '<p class="meta">' + (l.decision_maker ? esc(l.decision_maker) + (l.title ? ', ' + esc(l.title) : '') : 'Person who pays the bill: unknown') + '</p>' +
       '<p class="meta">' + contactOf(l) + '</p>' +
-      '<p class="meta">Source: <a href="' + esc(l.source_url) + '" target="_blank" rel="noopener">' + esc(l.source_url) + '</a></p>' +
+      '<p class="meta">Where we found it: <a href="' + esc(l.source_url) + '" target="_blank" rel="noopener">' + esc(l.source_url) + '</a></p>' +
       (l.why_now ? '<p class="meta">Why now: ' + esc(l.why_now) + '</p>' : '') +
-      '<p class="meta">Route: ' + esc(l.route) + ' · Found: ' + esc(l.date_found) + '</p>' +
-      pill(l.status, l.status) + pill(l.contact_status, l.contact_status) +
+      pill(plainStatus(l.status), l.status) + pill(plainContact(l.contact_status), l.contact_status) +
       '<div class="row">' +
       '<button type="button" class="btn-approve" data-act="approve" data-id="' + l.id + '">Approve</button>' +
-      '<button type="button" class="btn-reject" data-act="reject" data-id="' + l.id + '">Reject</button>' +
+      '<button type="button" class="btn-skip" data-act="reject" data-id="' + l.id + '">Skip</button>' +
       '</div></div>';
   }
 
   function renderLeads(leads) {
-    var status = $('filter-status').value, route = $('filter-route').value;
-    var kw = ($('keyword') ? $('keyword').value : '').trim().toLowerCase();
-    var sortBy = $('sort-by') ? $('sort-by').value : 'newest';
+    var kwEl = $('keyword'), sortEl = $('sort-by');
+    var kw = kwEl ? kwEl.value.trim().toLowerCase() : '';
+    var sortBy = sortEl ? sortEl.value : 'newest';
     var shown = leads.filter(function (l) {
-      if (status && l.status !== status) return false;
-      if (route && l.route !== route) return false;
       if (kw) {
         var hay = [l.business, l.city, l.decision_maker, l.title, l.route, l.why_now, l.contributed_by, l.source_label, (l.tags || []).join(' ')].join(' ').toLowerCase();
         if (hay.indexOf(kw) === -1) return false;
@@ -361,16 +383,6 @@
     $('counts').textContent = leads.length + ' leads · ' +
       leads.filter(function (l) { return l.status === 'new'; }).length + ' new';
     $('lead-cards').innerHTML = shown.map(leadCard).join('');
-    $('leads-body').innerHTML = shown.map(function (l) {
-      return '<tr><td><strong>' + esc(l.business) + '</strong><br>' + esc(l.city) +
-        '<br>' + pill(l.status, l.status) + pill(l.contact_status, l.contact_status) + '</td>' +
-        '<td>' + (l.decision_maker ? esc(l.decision_maker) + (l.title ? '<br>' + esc(l.title) : '') : '—') + '</td>' +
-        '<td>' + contactOf(l) + '</td>' +
-        '<td><a href="' + esc(l.source_url) + '" target="_blank" rel="noopener">source</a><br>' + esc(l.route) + '<br>' + esc(l.date_found) + '</td>' +
-        '<td>' + esc(l.why_now || '') + '</td>' +
-        '<td><button type="button" class="btn-approve" data-act="approve" data-id="' + l.id + '">Approve</button> ' +
-        '<button type="button" class="btn-reject" data-act="reject" data-id="' + l.id + '">Reject</button></td></tr>';
-    }).join('');
   }
 
   function renderMemory(rows) {
@@ -378,7 +390,7 @@
     $('memory-list').innerHTML = rows.map(function (m) {
       return '<div class="card"><h3>' + esc(m.key) + '</h3>' +
         '<p class="meta">' + esc(m.fact) + '</p>' +
-        (m.lesson ? '<p class="meta">Lesson: ' + esc(m.lesson) + '</p>' : '') +
+        (m.lesson ? '<p class="meta">What we learned: ' + esc(m.lesson) + '</p>' : '') +
         (m.outcome ? pill(m.outcome, m.outcome === 'worked' ? 'approved' : m.outcome === 'flopped' ? 'rejected' : 'new') : '') +
         (m.route ? '<span class="meta"> · ' + esc(m.route) + '</span>' : '') + '</div>';
     }).join('');
@@ -388,12 +400,12 @@
     $('pending-directions').innerHTML = rows.map(function (d) {
       return '<div class="card"><h3>' + esc(d.author) + ' · ' + esc(new Date(d.created_at).toLocaleDateString()) + '</h3>' +
         '<p class="meta">' + esc(d.text) + '</p>' + pill(d.status, d.status) +
-        (d.result_note ? '<p class="meta">Result: ' + esc(d.result_note) + '</p>' : '') + '</div>';
+        (d.result_note ? '<p class="meta">What happened: ' + esc(d.result_note) + '</p>' : '') + '</div>';
     }).join('');
   }
 
   function renderCampaigns(campaigns, blasts, mailable) {
-    $('mailable-count').textContent = (mailable == null ? '—' : mailable) + ' mailable contacts in the repository (unsubscribed excluded).';
+    $('mailable-count').textContent = (mailable == null ? '—' : mailable) + ' people on the list (people who asked to stop are not counted).';
     $('blast-campaign').innerHTML = campaigns.map(function (c) {
       return '<option value="' + c.id + '">' + esc(c.name) + ' (' + esc(c.type) + ', ' + esc(c.status) + ')</option>';
     }).join('');
@@ -403,49 +415,53 @@
         (c.news_story ? ' · ' + esc(c.news_story) : '') + '</p>' +
         (c.angle ? '<p class="meta">' + esc(c.angle) + '</p>' : '') +
         pill(c.status, c.status === 'sent' ? 'sent' : c.status === 'approved' ? 'approved' : 'draft') + '</div>';
-    }).join('') || '<p class="empty">No campaigns yet.</p>';
+    }).join('') || '<p class="empty">No emails yet.</p>';
     $('blast-list').innerHTML = blasts.map(function (b) {
       return '<div class="card"><h3>' + esc(b.name) + '</h3>' +
-        '<p class="meta">' + b.recipient_count + ' recipients · ' + esc(b.status) +
+        '<p class="meta">' + b.recipient_count + ' people · ' + esc(b.status) +
         (b.approved_by ? ' · approved by ' + esc(b.approved_by) : '') +
         (b.sent_at ? ' · sent ' + esc(new Date(b.sent_at).toLocaleDateString()) : '') + '</p>' +
         '<div class="row">' +
-        (b.status === 'draft' ? '<button type="button" class="btn-approve" data-blast-act="approve" data-id="' + b.id + '">Approve blast</button>' : '') +
-        (b.status === 'approved' ? '<button type="button" class="btn-primary" data-blast-act="send" data-id="' + b.id + '">Send (confirm)</button>' : '') +
+        (b.status === 'draft' ? '<button type="button" class="btn-approve" data-blast-act="approve" data-id="' + b.id + '">Approve</button>' : '') +
+        (b.status === 'approved' ? '<button type="button" class="btn-primary" data-blast-act="send" data-id="' + b.id + '">Send (say so again)</button>' : '') +
         '</div></div>';
-    }).join('') || '<p class="empty">No blasts yet.</p>';
+    }).join('') || '<p class="empty">Nothing sent yet.</p>';
   }
 
   var leadsCache = [];
   function renderGoal(g) {
     if (!g || !g.today) return;
-    $('goal-today').textContent = 'Today: ' + g.today.new_contacts + ' new addresses of 200' +
+    $('goal-today').textContent = 'Today: ' + g.today.new_contacts + ' of 200 new emails' +
       (g.today.new_leads ? ' · ' + g.today.new_leads + ' new leads' : '');
-    $('goal-shortfall').textContent = g.today.shortfall > 0
-      ? g.today.shortfall + ' still to go today — Scout + uploads get priority next run.'
+    var sf = $('goal-shortfall');
+    if (sf) sf.textContent = g.today.shortfall > 0
+      ? g.today.shortfall + ' still to go today.'
       : 'Goal hit for today.';
-    $('goal-breakdown').textContent = 'By route: ' +
-      Object.keys(g.breakdown.by_route || {}).map(function (k) { return k + ' ' + g.breakdown.by_route[k]; }).join(', ') +
-      ' · By contributor: ' +
-      Object.keys(g.breakdown.by_contributor || {}).map(function (k) { return k + ' ' + g.breakdown.by_contributor[k]; }).join(', ');
-    $('goal-week').textContent = 'This week: ' + (g.week || []).map(function (d) {
+    var br = g.breakdown || {};
+    var bd = $('goal-breakdown');
+    if (bd) bd.textContent = 'Where they came from: ' +
+      Object.keys(br.by_route || {}).map(function (k) { return k + ' ' + br.by_route[k]; }).join(', ') +
+      ' · Who gave them to us: ' +
+      Object.keys(br.by_contributor || {}).map(function (k) { return k + ' ' + br.by_contributor[k]; }).join(', ');
+    var wk = $('goal-week');
+    if (wk) wk.textContent = 'This week: ' + (g.week || []).map(function (d) {
       return new Date(d.date).toLocaleDateString(undefined, { weekday: 'short' }) + ' ' + d.new_contacts;
     }).join(' · ') + ' (week total ' + (g.week || []).reduce(function (a, d) { return a + d.new_contacts; }, 0) + ')';
   }
   function renderAgents(agents) {
     $('agent-list').innerHTML = (agents || []).map(function (a) {
-      return '<div class="card"><h3>' + esc(a.name) + ' — v' + a.version + '</h3>' +
-        '<p class="meta">' + esc(a.role || '') + ' · updated by ' + esc(a.updated_by || '—') +
-        (a.source_bot ? ' · from ' + esc(a.source_bot) : '') + '</p>' +
-        '<button type="button" class="btn-ghost" data-agent-history="' + esc(a.name) + '">Version history</button></div>';
-    }).join('') || '<p class="empty">No agents stored yet — the first reprogram creates one.</p>';
+      return '<div class="card"><h3>' + esc(a.name) + ' — version ' + a.version + '</h3>' +
+        '<p class="meta">' + esc(a.role || '') + ' · changed by ' + esc(a.updated_by || '—') +
+        (a.source_bot ? ' · words from ' + esc(a.source_bot) : '') + '</p>' +
+        '<button type="button" class="btn-ghost" data-agent-history="' + esc(a.name) + '">Past versions</button></div>';
+    }).join('') || '<p class="empty">No workers stored yet — the first rebuild creates one.</p>';
   }
   function renderScout(ideas) {
     $('scout-list').innerHTML = (ideas || []).map(function (d) {
       return '<div class="card"><h3>' + esc(d.idea) + '</h3>' +
         '<p class="meta">' + esc(d.status) + (d.result ? ' — ' + esc(d.result) : '') +
-        (d.addresses_found ? ' · ' + d.addresses_found + ' new addresses' : '') + '</p></div>';
-    }).join('') || '<p class="empty">No scout ideas yet.</p>';
+        (d.addresses_found ? ' · ' + d.addresses_found + ' new emails' : '') + '</p></div>';
+    }).join('') || '<p class="empty">No new ideas yet.</p>';
   }
   function loadAll() {
     return Promise.all([
@@ -468,8 +484,8 @@
       if (parts[4].ok) {
         $('upload-history').innerHTML = (parts[4].d.uploads || []).map(function (u) {
           return '<div class="card"><h3>' + esc(u.contributor_name) + ' — ' + esc(u.filename) + '</h3>' +
-            '<p class="meta">' + u.rows_imported + ' imported · ' + u.rows_duplicate + ' duplicate · ' +
-            u.rows_flagged + ' flagged · ' + esc(u.status) + '</p></div>';
+            '<p class="meta">' + u.rows_imported + ' added · ' + u.rows_duplicate + ' already had · ' +
+            u.rows_flagged + ' to check · ' + esc(u.status) + '</p></div>';
         }).join('');
       }
     });
@@ -477,11 +493,7 @@
 
   loadAll().catch(function () {});
 
-
-
-
-
-  // Unsubscribe link: ?unsubscribe=… (from a blast footer).
+  // Unsubscribe link: ?unsubscribe=… (from an email footer).
   var params = new URLSearchParams(window.location.search);
   var unsub = params.get('unsubscribe');
   if (unsub) {
@@ -489,10 +501,17 @@
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'unsubscribe', email: unsub })
     }).then(function () {
-      var m = $('page-note'); m.textContent = 'Unsubscribed — you will not be emailed again.';
+      var m = $('page-note'); m.textContent = 'You will not be emailed again.';
       m.hidden = false;
     });
   }
+
+  function openMore(id) {
+    var more = $('more');
+    if (more) more.open = true;
+    if (id) { var d = $(id); if (d) d.open = true; }
+  }
+  function scrollToId(id) { var el = $(id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 
   document.addEventListener('click', function (e) {
     var b = e.target.closest('button[data-act]');
@@ -506,20 +525,17 @@
     var bb = e.target.closest('button[data-blast-act]');
     if (bb) {
       var act = bb.dataset.blastAct, id = Number(bb.dataset.id);
-      if (act === 'send' && !window.confirm('Send this blast to all approved recipients? This cannot be undone.')) return;
+      if (act === 'send' && !window.confirm('Send this email to everyone on the list? This cannot be undone.')) return;
       api('/api/blasts', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: act, blast_id: id, confirm: act === 'send' ? true : undefined })
       }).then(function (x) {
         var el = $('blast-ok');
-        if (x.ok) { el.textContent = act === 'send' ? ('Sent to ' + (x.d.sent || 0) + ' recipients.') : 'Blast approved — nothing sent yet.'; el.hidden = false; loadAll(); }
+        if (x.ok) { el.textContent = act === 'send' ? ('Sent to ' + (x.d.sent || 0) + ' people.') : 'Approved — nothing sent yet.'; el.hidden = false; loadAll(); }
         else { var er = $('blast-error'); er.textContent = x.d.error || 'Could not do that.'; er.hidden = false; }
       });
     }
   });
-
-  $('filter-status').addEventListener('change', function () { renderLeads(leadsCache); });
-  $('filter-route').addEventListener('change', function () { renderLeads(leadsCache); });
 
   $('direction-btn').addEventListener('click', function () {
     $('direction-error').hidden = true; $('direction-ok').hidden = true;
@@ -532,56 +548,44 @@
     });
   });
 
-  // ---- Action bar (v3): each button does one named thing ----
-  function scrollToId(id) { var el = $(id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-  function note(text) { var m = $('action-note'); m.textContent = text; }
-  $('btn-send-email').addEventListener('click', function () {
-    scrollToId('blast-campaign');
-    note('Pick a campaign, then Build blast — you will see recipient count + preview first. Approval arms it; sending needs a second confirm. Nothing sends on this tap.');
-    $('blast-name').focus();
-  });
-  $('btn-craft-campaign').addEventListener('click', function () {
-    scrollToId('campaign-name');
-    note('Campaign builder is below — news story or pain point, draft only.');
-    $('campaign-name').focus();
+  // ---- Big buttons: Add leads / Send email ----
+  $('btn-add-leads').addEventListener('click', function () {
+    var p = $('add-panel');
+    p.hidden = !p.hidden;
+    if (!p.hidden) scrollToId('btn-add-leads');
   });
   $('btn-import-list').addEventListener('click', function () {
-    scrollToId('contributor-name');
-    note('Upload flow is below — say who gave us the list, then pick the CSV.');
+    $('upload-card').hidden = false;
     $('contributor-name').focus();
   });
-  $('btn-sort-keyword').addEventListener('click', function () {
-    scrollToId('keyword');
-    note('Type a keyword to search and sort leads — by word, tag, route, city, contributor, or status.');
-    $('keyword').focus();
-  });
   $('btn-find-leads').addEventListener('click', function () {
-    note('Queuing Hunter + Route Scout for the next run…');
+    var n = $('action-note');
+    n.textContent = 'Looking for new leads…';
     api('/api/directions', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ author: 'Jessie', text: 'Find new leads: run Hunter (routes 1–3) + Route Scout (1–2 new ideas) and report what you found vs the 200/day goal.' })
     }).then(function (x) {
-      note(x.ok ? 'Queued — Hunter + Scout will run next, and report back vs 200/day.' : 'Could not queue it — try again.');
+      n.textContent = x.ok ? 'Queued — new leads will show up here after the next run.' : 'Could not queue it — try again.';
       if (x.ok) loadAll();
     });
   });
-  $('btn-reprogram').addEventListener('click', function () {
-    scrollToId('reprogram-heading');
-    note('Paste the whole chunk from the other bot below — it rebuilds that agent in the website.');
-    $('reprogram-text').focus();
+  $('btn-send-email').addEventListener('click', function () {
+    openMore('details-send');
+    scrollToId('blast-campaign');
+    var n = $('send-note');
+    n.textContent = 'Pick an email, then check the preview — how many people, and a few names. Nothing sends here.';
+    $('blast-name').focus();
   });
-  $('btn-goal').addEventListener('click', function () {
-    scrollToId('goal-heading');
-    api('/api/goal').then(function (x) { if (x.ok) renderGoal(x.d); });
-    note('Goal Tracker refreshed.');
-  });
-  $('keyword').addEventListener('input', function () { renderLeads(leadsCache); });
-  $('sort-by').addEventListener('change', function () { renderLeads(leadsCache); });
 
-  // ---- Reprogram: paste a chunk, rebuild the agent ----
+  var kwEl = $('keyword'), sortEl = $('sort-by');
+  if (kwEl) kwEl.addEventListener('input', function () { renderLeads(leadsCache); });
+  if (sortEl) sortEl.addEventListener('change', function () { renderLeads(leadsCache); });
+
+  // ---- Change how the agent works: paste words, rebuild the worker ----
   $('reprogram-btn').addEventListener('click', function () {
     $('reprogram-error').hidden = true; $('reprogram-ok').hidden = true;
-    var name = ($('reprogram-new-name').value.trim() || $('reprogram-agent').value);
+    var agentSel = $('reprogram-agent');
+    var name = ($('reprogram-new-name').value.trim() || agentSel.value);
     api('/api/reprogram', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -593,8 +597,8 @@
     }).then(function (x) {
       if (x.ok) {
         var m = $('reprogram-ok');
-        m.textContent = 'Rebuilt ' + x.d.agent + ' to v' + x.d.version + ' — ' + x.d.changed +
-          (x.d.declined && x.d.declined.length ? ' (dropped ' + x.d.declined.length + ' part(s) that break the brief: ' + x.d.declined.map(function (d) { return d.rule; }).join(', ') + ')' : '');
+        m.textContent = 'Rebuilt ' + x.d.agent + ' — version ' + x.d.version + ' — ' + x.d.changed +
+          (x.d.declined && x.d.declined.length ? ' (left out ' + x.d.declined.length + ' part(s) that break the rules: ' + x.d.declined.map(function (d) { return d.rule; }).join(', ') + ')' : '');
         m.hidden = false; $('reprogram-text').value = ''; loadAll();
       } else { var e = $('reprogram-error'); e.textContent = x.d.error || 'Could not rebuild.'; e.hidden = false; }
     });
@@ -604,10 +608,10 @@
     if (!h) return;
     api('/api/reprogram?agent=' + encodeURIComponent(h.dataset.agentHistory) + '&history=1').then(function (x) {
       if (!x.ok) return;
-      $('agent-history').innerHTML = '<div class="card"><h3>' + esc(x.d.agent.name) + ' — version history</h3>' +
+      $('agent-history').innerHTML = '<div class="card"><h3>' + esc(x.d.agent.name) + ' — past versions</h3>' +
         (x.d.history || []).map(function (v) {
-          return '<p class="meta">v' + v.version + ' · ' + esc(v.updated_by || '—') +
-            (v.source_bot ? ' · from ' + esc(v.source_bot) : '') + ' · ' + esc(new Date(v.created_at).toLocaleDateString()) + '</p>';
+          return '<p class="meta">Version ' + v.version + ' · ' + esc(v.updated_by || '—') +
+            (v.source_bot ? ' · words from ' + esc(v.source_bot) : '') + ' · ' + esc(new Date(v.created_at).toLocaleDateString()) + '</p>';
         }).join('') + '</div>';
     });
   });
@@ -622,7 +626,7 @@
     });
   });
 
-  // ---- CSV upload: parse in the browser, map columns, POST JSON rows ----
+  // ---- CSV upload: parse in the browser, match columns, send the rows ----
   var csvHeaders = [], csvRows = [];
   function parseCsv(text) {
     var rows = [], row = [], cur = '', inQ = false;
@@ -667,7 +671,7 @@
           fields.map(function (f2) { return '<option value="' + f2 + '"' + (f2 === g ? ' selected' : '') + '>' + f2 + '</option>'; }).join('') +
           '</select>';
       }).join('');
-      $('upload-preview').textContent = csvRows.length + ' rows in this file. Nothing is imported until you tap Import.';
+      $('upload-preview').textContent = csvRows.length + ' rows in this file. Nothing is added until you tap Import.';
       $('mapping').hidden = false;
       $('upload-error').hidden = true;
     };
@@ -700,7 +704,7 @@
     }).then(function (x) {
       if (x.ok) {
         var m = $('upload-ok');
-        m.textContent = 'Imported ' + x.d.rows_imported + ' · ' + x.d.rows_duplicate + ' duplicate · ' + x.d.rows_flagged + ' flagged.';
+        m.textContent = 'Added ' + x.d.rows_imported + ' · ' + x.d.rows_duplicate + ' already had · ' + x.d.rows_flagged + ' to check.';
         m.hidden = false;
         $('upload-flagged').innerHTML = (x.d.flagged || []).map(function (f) {
           return '<p class="meta">Row ' + f.row + ': ' + esc(f.reason) + '</p>';
@@ -746,8 +750,8 @@
       if (x.ok) {
         var p = x.d.preview;
         $('blast-preview').innerHTML = '<div class="card"><h3>Preview — draft only, nothing sent</h3>' +
-          '<p class="meta">' + p.recipient_count + ' recipients</p>' +
-          '<p class="meta">Sample: ' + p.sample.map(function (s) { return esc(s.email); }).join(', ') + '</p>' +
+          '<p class="meta">' + p.recipient_count + ' people</p>' +
+          '<p class="meta">A few names: ' + p.sample.map(function (s) { return esc(s.email); }).join(', ') + '</p>' +
           '<p class="meta">Subjects: ' + (p.subject_options || []).map(esc).join(' / ') + '</p>' +
           '<p class="meta">' + esc(p.note || '') + '</p></div>';
         loadAll();
