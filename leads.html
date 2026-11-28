@@ -124,6 +124,23 @@
       <p class="sub">How many new emails today?</p>
     </div>
 
+    <div class="card" id="ask-card">
+      <h3>Ask the lead agent</h3>
+      <p class="sub">Ask a question about the list — how many emails, how many in a
+      city, the latest sore spots. The answer comes from the real list,
+      never guessed. If the list isn't live yet, it says so.</p>
+      <label for="ask-input">Your question</label>
+      <input type="text" id="ask-input" placeholder="e.g. How many emails total?" autocomplete="off">
+      <button class="btn-primary" id="ask-btn" type="button">Ask</button>
+      <div class="row" id="ask-examples">
+        <button type="button" class="btn-ghost" data-ask="How many emails total?">How many emails total?</button>
+        <button type="button" class="btn-ghost" data-ask="How many in Dallas?">How many in Dallas?</button>
+        <button type="button" class="btn-ghost" data-ask="What are the latest pain points?">What are the latest pain points?</button>
+      </div>
+      <p class="ok" id="ask-answer" style="white-space:pre-line" hidden></p>
+      <p class="error" id="ask-error" hidden></p>
+    </div>
+
     <button class="big-btn btn-primary" id="btn-add-leads" type="button">Add leads</button>
     <div id="add-panel" hidden>
       <button class="big-btn btn-ghost" id="btn-import-list" type="button">Upload a list</button>
@@ -546,6 +563,34 @@
       if (x.ok) { $('direction-text').value = ''; $('direction-ok').hidden = false; loadAll(); }
       else { var e = $('direction-error'); e.textContent = x.d.error || 'Could not save.'; e.hidden = false; }
     });
+  });
+
+  // ---- Ask the lead agent: a question, answered from the real list ----
+  function askLeadAgent(question) {
+    var q = (question || '').trim();
+    var ans = $('ask-answer'), err = $('ask-error');
+    ans.hidden = true; err.hidden = true;
+    if (!q) { err.textContent = 'Ask a question first.'; err.hidden = false; return; }
+    ans.textContent = 'Asking…';
+    ans.hidden = false;
+    var authorEl = $('author');
+    api('/api/ask', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: q, author: authorEl ? authorEl.value : 'Jessie' })
+    }).then(function (x) {
+      if (x.ok && x.d.answer) { ans.textContent = x.d.answer; ans.hidden = false; }
+      else { ans.hidden = true; err.textContent = (x.d && x.d.error) || 'Could not answer that — try again.'; err.hidden = false; }
+    }).catch(function () {
+      ans.hidden = true; err.textContent = 'Could not reach the lead agent — try again.'; err.hidden = false;
+    });
+  }
+  $('ask-btn').addEventListener('click', function () { askLeadAgent($('ask-input').value); });
+  $('ask-input').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); askLeadAgent($('ask-input').value); }
+  });
+  document.addEventListener('click', function (e) {
+    var ex = e.target.closest('button[data-ask]');
+    if (ex) { $('ask-input').value = ex.dataset.ask; askLeadAgent(ex.dataset.ask); }
   });
 
   // ---- Big buttons: Add leads / Send email ----
