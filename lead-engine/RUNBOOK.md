@@ -256,8 +256,9 @@ rejection since the last run):
 - `key = 'do-not-repeat:<business>|<city>'`, `fact` = the real reason
   (e.g. "Rejected by Jessie: already a customer").
 
-Use `INSERT ... ON CONFLICT (key) DO UPDATE` so a route's memory row is
-kept current instead of piling up duplicates.
+Write each row through `POST /api/memory` (upsert on key — the endpoint
+runs the `INSERT ... ON CONFLICT (key) DO UPDATE` itself), so a route's
+memory row is kept current instead of piling up duplicates.
 
 ### 10. Close the directions
 
